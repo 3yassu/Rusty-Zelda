@@ -11,8 +11,8 @@ pub struct Item {
 }
 
 impl Item{
-    pub fn new(id: u32, cost: i32, collision: bool, location: (Option<i32>, Option<i32>)) -> Self { 
-        Self{id, cost, collision, location}
+    pub fn new(id: u32, cost: i32, count: Option<i32>, collision: bool, location: (Option<i32>, Option<i32>)) -> Self { 
+        Self{id, cost, count, collision, location}
     }
 
     pub fn on_pickup(&self){ //on pick-up of essential items
@@ -56,12 +56,12 @@ impl Item{
         }
     }
 
-    pub fn 
+    pub fn count_remove(&mut self){self.count -=1;}
 
 
 }
 
 fn main(){
-    let my_item = Item::new(0, 0, true, (Some(0), Some(0)));
+    let my_item = Item::new(0, 0, Some(12), true, (Some(0), Some(0)));
     print!("{:?}",my_item);
 }
