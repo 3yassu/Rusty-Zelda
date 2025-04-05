@@ -16,7 +16,7 @@ impl ShopRoomData{
     pub fn new(player_spawn: (f32, f32), dungeon: Vec<Vec<u8>>, shop_keeper: npc::Shopkeeper) -> Self{
         Self{player_spawn, dungeon, shop_keeper}
     }
-    pub fn access_spawn(&self) -> &(f32, f32){&self.player_spawn}
+    pub fn access_spawn(&mut self) -> &mut (f32, f32){&mut self.player_spawn}
 }
 #[derive(Debug)]
 pub struct HostileRoomData{
@@ -29,5 +29,5 @@ impl HostileRoomData{
     pub fn new(player_spawn: (f32, f32), dungeon: Vec<Vec<u8>>, enemies: Vec<npc::Enemy>, items: Vec<item::Item>) -> Self{
         Self{player_spawn, dungeon, enemies, items}
     }
-    pub fn access_spawn(&self) -> &(f32, f32){&self.player_spawn}
+    pub fn access_spawn(&mut self) -> &mut (f32, f32){&mut self.player_spawn}
 }
