@@ -3,7 +3,7 @@ use super::room_data;
 
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
 struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 directions
-    pub data: RoomData, //(has data{room item info & image data}
+    pub data: room_data::RoomData, //(has data{room item info & image data}
     north: Connector,
     east: Connector,
     south: Connector,
@@ -12,7 +12,7 @@ struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 direction
     down: Connector //might change to below?
 }
 impl Room{//impl new for Room (debating on wanting to initialize with no data or give it data?)
-    pub fn new(data: RoomData) -> Self{//if I don't include data add functions that add the individual data pieces
+    pub fn new(data: room_data::RoomData) -> Self{//if I don't include data add functions that add the individual data pieces
         Self{data, north: None, south: None, east: None, west: None, up: None, down: None}
     }
 }
