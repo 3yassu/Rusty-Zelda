@@ -14,7 +14,7 @@ impl Item{
         Self{id, cost, collision, location}
     }
 
-    pub fn on_pickup((i32, i32)){ //on pick-up of essential items
+    pub fn on_pickup(location: (i32, i32)){ //on pick-up of essential items
         match id {//only bare-bones implementing essential items
             0 => println!("add sword to inventory"), 
             3 => println!("add shield to inventory"),
@@ -35,7 +35,7 @@ impl Item{
         }
     }
 
-    pub fn use((i32, i32)) { //use weapons
+    pub fn use_item(location: (i32, i32)) { //use weapons
         match id {
             0 => println!("use sword"),
             3 => println!("use shield"),
@@ -44,7 +44,7 @@ impl Item{
             8 => println!("use bow"), //if rupee > 0 AND arrows in inventory
             16 => println!("use life potion- fully restores hearts"),
             32 => println!("use small key"), //may be incorrect behavior
-            _ => println!("unimplemented item...)
+            _ => println!("unimplemented item...")
         }
     }
 }
