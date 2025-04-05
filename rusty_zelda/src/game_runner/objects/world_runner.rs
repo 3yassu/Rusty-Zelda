@@ -270,6 +270,45 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
+    pub fn move_x(&mut self, x: i32, at_current: bool){
+        if at_current == true {
+            self.traverse = self.current;
+        }
+        match x > 0 {
+            true => {
+                for _ in 0..x {self.traverse_east();}
+            },
+            false => {
+                for _ in 0..(-x) {self.traverse_west();}
+            }
+        }
+    }
+    pub fn move_y(&mut self, x: i32, at_current: bool){
+        if at_current == true {
+            self.traverse = self.current;
+        }
+        match x > 0 {
+            true => {
+                for _ in 0..x {self.traverse_north();}
+            },
+            false => {
+                for _ in 0..(-x) {self.traverse_south();}
+            }
+        }
+    }
+    pub fn move_z(&mut self, x: i32, at_current: bool){
+        if at_current == true {
+            self.traverse = self.current;
+        }
+        match x > 0 {
+            true => {
+                for _ in 0..x {self.traverse_up();}
+            },
+            false => {
+                for _ in 0..(-x) {self.traverse_down();}
+            }
+        }
+    }
 }
 impl WorldCursor{
     fn clear(&mut self){ //WANNA CHANGE TO ITERATIVE (also add functionanitly to put some metadata in a file for save states)
@@ -328,11 +367,11 @@ impl WorldCursor{
             }
         }
     }
-    pub fn access_spawn(&self) -> &(f32, f32){
+    pub fn access_spawn(&mut self) -> &mut (f32, f32){
         unsafe{
             match self.current{
                 Some(room) => {
-                    match &(*room.as_ptr()).data{
+                    match &mut (*room.as_ptr()).data{
                         room_data::RoomData::Shop(shop) => shop.access_spawn(),
                         room_data::RoomData::Hostile(hostile) => hostile.access_spawn(),
                     }
