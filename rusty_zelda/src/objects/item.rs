@@ -15,7 +15,23 @@ impl Item{
     }
 
     pub fn use((i32, i32)){
-        match id //based on item id, functionality differs.
+        match id {//only bare-bones implementing essential items
+            0 => println!("use sword"), 
+            3 => println!("use shield"),
+            5 => println!("use boomerang"),
+            7 => println!("use bomb"),
+            8 => println!("use bow"),
+            9 => println!("use arrow-- decrement rupee counter!"),
+            16 => println!("use life potion-- fully restore hearts!"),
+            30 => println!("use compass-- shows location of triforce fragment!"),
+            31 => println!("use dungeon map-- shows each room of the dungeon!"),
+            32 => println!("use small key-- unlocks Locked Doors!"),
+            33 => println!("use triforce fragment~"),
+            40 => println!("recovery heart-- heals 1 heart"),
+            41 => println!("heart container-- increases max hearts by 1"),
+            42 => println!("clock-- freezes all enemies"),
+            43 => println!("rupee -- increments rupee counter")
+        }
     }
 }
 
