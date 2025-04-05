@@ -17,19 +17,20 @@ fn room_creation(){
     let room1data = RoomData::Hostile(HostileRoomData::new(
         player_spawn: (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0); //this is shitty
         dungeon: Vec<Vec<u8>>  = vec! [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //add vec! to each line eyassu
-            [1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-            [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
-            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-            [1, 2, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 2, 1],
-            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-            [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
-            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec! [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //add vec! to each line eyassu
+           vec! [1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec! [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
+           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec! [1, 2, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 2, 1],
+           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec! [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
+           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec! [1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+           vec! [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ];
-        //add enemyvec, itemvec...
+        enemy_vec = vec![];
+        item_vec = vec![];
     ));
 }
 
@@ -113,5 +114,30 @@ fn main() -> Result <(), String> {
 
         canvas.set_draw_color(Color::RGB(0,0,0));
         canvas.clear();
+
+        for y in 0..MAP_HEIGHT{
+            for x in 0..MAP_WIDTH{
+                let tile = world.get_curr().dungeon[y][x];
+                let color = match tile{
+                    0 => Color::RGB(255, 51, 0),
+                    1 => Color::RGB(128, 0, 0),
+                    2 => Color::RGB(26, 13, 0),
+                    3 => Color::RGB(153, 0, 51),
+                    _ => Color::RGB(0, 204, 0),
+                };
+                canvas.set_draw_color(color);
+                let _ = canvas.fill_rect(Rect::new(
+                        (x as i32) * TILE_SIZE as i32,
+                        (y as i32) * TILE_SIZE as i32,
+                        TILE_SIZE, TILE_SIZE,
+                ));
+            }
+        }
+
+        canvas.set_draw_color(Color::RGB(255, 179, 26));
+        let _ = canvas.fill_rect(player.rect());
+        canvas.present();
+        std::thread::sleep(Duration::from_millis(16));
     }
- };
+    Ok(())
+ }
