@@ -18,7 +18,7 @@ impl Felix{
             item.use_item(self.location, self.rupee_balance);
             if item.is_disposable(){
                 if item.count_remove() == 0 {
-                    self.hand.1 = None;
+                    self.hand.0 = None;
                 }
             }
         }
@@ -28,7 +28,7 @@ impl Felix{
             item.use_item(self.location, self.rupee_balance);
             if item.is_disposable(){
                 if item.count_remove() == 0 {
-                    self.hand. = None;
+                    self.hand.1 = None;
                 }
             }
         }

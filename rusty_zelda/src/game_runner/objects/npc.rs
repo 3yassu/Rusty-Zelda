@@ -24,17 +24,18 @@ pub struct Enemy {
     id: u32,
     collision: bool,
     ignore_room_collision: bool,
-    location: (i32, i32)
+    location: (i32, i32),
+    movement_type: u8,
     //animations
 }
 
 impl Enemy {
-    pub fn new(item_on_kill: item::Item, id: u32, collision: bool, ignore_room_collision: bool, location: (i32, i32) ) -> Self {
+    pub fn new(item_on_kill: item::Item, id: u32, collision: bool, ignore_room_collision: bool, location: (i32, i32)) -> Self {
         Self{item_on_kill, id, collision, ignore_room_collision, location}
     }
     //enemy movement
     pub fn move_enemy(&mut self, x: i32, y: i32){
         self.location.0 += x; self.location.1 += y;
     }
-    //enemy ai -- attacks need to be based on enemy id/type. 
+    //enemy ai -- attacks need to be based on enemy id/type.
 }
