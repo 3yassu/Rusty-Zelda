@@ -5,6 +5,7 @@ pub struct Item {
     id: u32,
     //animation: links to graphics
     cost: i32,
+    count: Option<u32>,
     collision: bool,
     location: (Option<i32>, Option<i32>)
 }
@@ -47,6 +48,17 @@ impl Item{
             _ => println!("unimplemented item...")
         }
     }
+
+    pub fn is_disposable(&self) -> bool{
+        match &self.count{
+            None => false,
+            _ => true,
+        }
+    }
+
+    pub fn 
+
+
 }
 
 fn main(){
