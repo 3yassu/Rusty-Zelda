@@ -1,4 +1,10 @@
 //Nothing for now :)
+use super::item;
+use super::npc;
+pub enum RoomData{
+    ShopRoomData,
+    HostileRoomData
+}
 #[derive(Debug)]
 pub struct ShopRoomData{//room item info & image data
     dimensions: (usize, usize),
