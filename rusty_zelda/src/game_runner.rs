@@ -1,23 +1,27 @@
 mod objects;
-pub struct GameRunner{
-    fps: u32,
-    PLAYER_SPEED: i32
-    //graphics: SDL2 STUFF (WORRY AB LATER) 
-}
-impl GameRunner{
-    pub fn new(fps: u32) -> Self {
-        Self{fps}
-    }
-    pub fn update(&mut self, delta_time: u32){ //maybe make sub_functions for update to make code more readable
-        //if Some(key) = GameRunner::detect_key(){
-            //match key{
-                //sdl2::Keyboard
-            //}
-        //}
-    }
-}
-impl GameRunner{
-    pub fn render(&mut self){ //maybe make sub_functions for render to make code more readable
-        let two = 1+1;
-    }
+
+use sdl2::event::Event;
+use sdl2::keyboard::Keycode;
+use std::time::Duration;
+use sdl2::pixels::Color;
+use sdl2::rect::Rect;
+
+const TILE_SIZE: u32 = 32;
+const ROOM_WIDTH: u32 = 512;
+const ROOM_HEIGHT: u32 = 352;
+const MAP_WIDTH: usize = 16;
+const MAP_HEIGHT: usize = 11;
+
+fn room_creation(){
+    //initialize spawn room and room data
+    let room1data = RoomData::Hostile(HostileRoomData::new(
+        dimensions: (ROOM_WIDTH, ROOM_HEIGHT),
+        player_spawn: (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0); //this is shitty
+        dungeon: [[u8; dimensions.0]; dimensions.1] = [
+
+
+
+        ];
+    ));
+    let room1: Room = {room1data};
 }
