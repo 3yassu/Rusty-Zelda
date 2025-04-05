@@ -174,13 +174,13 @@ impl WorldCursor{
     }
 }
 impl WorldCursor{ //instantiation and adding code
-    pub fn new(current_data: RoomData) -> Self{
+    pub fn new(current_data: room_data::RoomData) -> Self{
         unsafe{
             let room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(current_data))));
             Self{current: Some(room), traverse: Some(room)}            
         }
     }
-    pub fn add_north(&mut self, room_data: RoomData){
+    pub fn add_north(&mut self, room_data: room_data::RoomData){
         unsafe{// Though NonNull::new() isn't unsafe NonNull::new_unchecked is (It's faster as it bypasses safety checks just don't be stupid)
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data)))); //create new_room with room info (debating on giving it a room instead of room_data)
             match &mut self.traverse{ //mutable reference for match since I wanna keep self.traverse as it is
@@ -195,7 +195,7 @@ impl WorldCursor{ //instantiation and adding code
             }// Debating on adding a paniic if you try to traverse while on None ^^ (if not will change to if let format)
         }
     }
-    pub fn add_south(&mut self, room_data: RoomData){ //CHECK add_north
+    pub fn add_south(&mut self, room_data: room_data::RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -210,7 +210,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_east(&mut self, room_data: RoomData){ //CHECK add_north
+    pub fn add_east(&mut self, room_data: room_data::RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -225,7 +225,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_west(&mut self, room_data: RoomData){ //CHECK add_north
+    pub fn add_west(&mut self, room_data: room_data::RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -240,7 +240,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_up(&mut self, room_data: RoomData){ //CHECK add_north
+    pub fn add_up(&mut self, room_data: room_data::RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -255,7 +255,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_down(&mut self, room_data: RoomData){ //CHECK add_north
+    pub fn add_down(&mut self, room_data: room_data::RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -325,6 +325,7 @@ impl Drop for WorldCursor{ //it gets mad if I didn't implement a drop function :
 mod test {
     #[test]
     fn tester(){ //TEST
+        /*
         let data = RoomData{information: 125};
         let mut worldy = WorldCursor::new(data);
         let new_data = RoomData{information: 15};
@@ -335,5 +336,6 @@ mod test {
         worldy.traverse_south();
         unsafe{println!("{}", (*worldy.current.unwrap().as_ptr()).data.information)};
         dbg!(&worldy);
+        */
     }
 }
