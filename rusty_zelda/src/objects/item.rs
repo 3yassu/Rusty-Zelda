@@ -14,23 +14,37 @@ impl Item{
         Self{id, cost, collision, location}
     }
 
-    pub fn use((i32, i32)){
+    pub fn on_pickup((i32, i32)){ //on pick-up of essential items
         match id {//only bare-bones implementing essential items
-            0 => println!("use sword"), 
+            0 => println!("add sword to inventory"), 
+            3 => println!("add shield to inventory"),
+            5 => println!("add boomerang to inventory"),
+            7 => println!("add bomb to inventory"),
+            8 => println!("add bow to inventory"),
+            9 => println!("add arrow to inventory"),
+            16 => println!("add life potion to inventory"),
+            30 => println!("modifies ui to show location of fragment"),
+            31 => println!("modifies ui to show dungeon room layout"),
+            32 => println!("add small key to inventory"),
+            33 => println!("add triforce frag to inventory"),
+            40 => println!("heals 1 heart"),
+            41 => println!("increases max hearts by 1"),
+            42 => println!("freezes all enemies"),
+            43 => println!("increments rupee counter"),
+            _ => println!("unimplemented item...")
+        }
+    }
+
+    pub fn use((i32, i32)) { //use weapons
+        match id {
+            0 => println!("use sword"),
             3 => println!("use shield"),
             5 => println!("use boomerang"),
-            7 => println!("use bomb"),
-            8 => println!("use bow"),
-            9 => println!("use arrow-- decrement rupee counter!"),
-            16 => println!("use life potion-- fully restore hearts!"),
-            30 => println!("use compass-- shows location of triforce fragment!"),
-            31 => println!("use dungeon map-- shows each room of the dungeon!"),
-            32 => println!("use small key-- unlocks Locked Doors!"),
-            33 => println!("use triforce fragment~"),
-            40 => println!("recovery heart-- heals 1 heart"),
-            41 => println!("heart container-- increases max hearts by 1"),
-            42 => println!("clock-- freezes all enemies"),
-            43 => println!("rupee -- increments rupee counter")
+            7 => println!("use bomb"), //if bomb in inventory
+            8 => println!("use bow"), //if rupee > 0 AND arrows in inventory
+            16 => println!("use life potion- fully restores hearts"),
+            32 => println!("use small key"), //may be incorrect behavior
+            _ => println!("unimplemented item...)
         }
     }
 }
