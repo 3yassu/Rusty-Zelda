@@ -1,4 +1,4 @@
 mod game_runner;
 fn main() {
-    println!("Hello, world!");
+    game_runner::bain();
 }

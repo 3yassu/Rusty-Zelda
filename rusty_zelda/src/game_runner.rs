@@ -33,17 +33,16 @@ fn room_creation() -> objects::room_data::RoomData{
         vec!(),
     ))
 }
-static mut world: objects::world_runner::WorldCursor = objects::world_runner::WorldCursor::new(room_creation());
-
 struct Player { //could be in felix 
     x: f32, y: f32, speed: f32, size: u32,
+    world: objects::world_runner::WorldCursor
 }
 
 impl Player {
     fn rect(&self) -> Rect{
         Rect::new(self.x as i32, self.y as i32, self.size, self.size)
     }
-    fn in_collision(x: f32, y:f32, size: f32) -> bool {
+    fn in_collision(&mut self, x: f32, y:f32, size: f32) -> bool {
         let corners = [
             (x, y),
             (x + size - 1.0, y),
@@ -53,13 +52,13 @@ impl Player {
         for (cx, cy) in corners {
             let tile_x = (cx/TILE_SIZE as f32) as usize;
             let tile_y = (cy/TILE_SIZE as f32) as usize;
-            unsafe{if world.get_curr()[tile_y][tile_x] % 2 == 1 {return true};}
+            if self.world.get_curr()[tile_y][tile_x] % 2 == 1 {return true};
         }
         false
     }
 }
 
-fn main() -> Result <(), String> {
+pub fn bain() -> Result <(), String> {
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
     let window = video_subsystem
@@ -73,6 +72,7 @@ fn main() -> Result <(), String> {
     let mut player = Player {
         x: TILE_SIZE as f32 * 2.0, y: TILE_SIZE as f32 * 2.0,
         speed: 2.0, size: TILE_SIZE / 2,
+        world: objects::world_runner::WorldCursor::new(room_creation())
     };
 
     'running: loop{
@@ -104,10 +104,10 @@ fn main() -> Result <(), String> {
 
         let new_x = player.x + dx; let new_y = player.y + dy;
 
-        if !Player::in_collision(new_x, player.y, player.size as f32) {
+        if !player.in_collision(new_x, player.y, player.size as f32) {
             player.x = new_x;
         }
-        if !Player::in_collision(player.x, new_y, player.size as f32){
+        if !player.in_collision(player.x, new_y, player.size as f32){
             player.y = new_y;
         }
 
@@ -116,7 +116,7 @@ fn main() -> Result <(), String> {
         unsafe{
         for y in 0..MAP_HEIGHT{
             for x in 0..MAP_WIDTH{
-                let tile = world.get_curr()[y][x];
+                let tile = player.world.get_curr()[y][x];
                 let color = match tile{
                     0 => Color::RGB(255, 51, 0),
                     1 => Color::RGB(128, 0, 0),
