@@ -272,6 +272,19 @@ impl WorldCursor{ //instantiation and adding code
     }
 }
 impl WorldCursor{
+    pub fn get_curr(&self) -> &Vec<Vec<u8>>{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &(*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => &shop.dungeon,
+                        room_data::RoomData::Hostile(hostile) => &hostile.dungeon,
+                    }
+                },
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
     fn clear(&mut self){ //WANNA CHANGE TO ITERATIVE (also add functionanitly to put some metadata in a file for save states)
         self.current = None; //makes current None so it doesn't become a dangling pointer
         unsafe{ //dereferencing raw pointers is unsafe!!!
