@@ -9,12 +9,14 @@ impl GameRunner{
         Self{fps}
     }
     pub fn update(&mut self, delta_time: u32){ //maybe make sub_functions for update to make code more readable
-        if Some(key) = GameRunner::detect_key(){
-            match key{
-                sdl2::Keyboard
-            }
-        }
-    }
+        //if Some(key) = GameRunner::detect_key(){
+            //match key{
+                //sdl2::Keyboard
+            //}
+        //}
+    //}
+}
+impl GameRunner{
     pub fn render(&mut self){ //maybe make sub_functions for render to make code more readable
          
     }
