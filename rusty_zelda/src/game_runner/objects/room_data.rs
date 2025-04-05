@@ -28,4 +28,5 @@ impl HostileRoomData{
     pub fn new(player_spawn: (f32, f32), dungeon: Vec<Vec<u8>>, enemies: Vec<npc::Enemy>, items: Vec<item::Item>) -> Self{
         Self{player_spawn, dungeon, enemies, items}
     }
+    pub fn access_spawn(&self) -> &(f32, f32){&self.player_spawn}
 }
