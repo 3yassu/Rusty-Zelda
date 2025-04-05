@@ -1,4 +1,7 @@
 use std::ptr::NonNull; //EWWW NONNULL POINTER BLEH :P
+mod item;
+mod npc;
+
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
 struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 directions
     pub data: RoomData, //(has data{room item info & image data}
@@ -15,8 +18,17 @@ impl Room{//impl new for Room (debating on wanting to initialize with no data or
     }
 }
 #[derive(Debug)]
-pub struct RoomData{//room item info & image data
-    information: i32,
+pub struct ShopRoomData{//room item info & image data
+    //dimensions: (i32, i32),
+    shopkeeper: Shopkeeper::new() //shopkeeper handles items, etc
+}
+
+#[derive(Debug)]
+pub struct RoomData{
+    //dimensions: (i32, i32),
+    enemies: Vec<Enemy::new()>,
+    items: Vec<Item::new()>,
+    teleports: Vec<(i32, i32)> //special teleports in the middle of room
 }
 type Connector = Option<NonNull<Room>>;//connector type is Option of a NonNull of a Room;
 #[derive(Debug)]
@@ -221,19 +233,16 @@ impl Drop for WorldCursor{ //it gets mad if I didn't implement a drop function :
     } //even if traverse didn't get removed it goes out of scope HERE and gets DROPPED muahhahha
 }
 
-#[cfg(test)]
-mod test {
-    #[test]
-    fn tester(){ //TEST
-        let data = RoomData{information: 125};
-        let mut worldy = WorldCursor::new(data);
-        let new_data = RoomData{information: 15};
-        worldy.add_north(new_data);
-        let new_data = RoomData{information: 12};
-        worldy.traverse_north();
-        worldy.add_north(new_data);
-        worldy.traverse_south();
-        unsafe{println!("{}", (*worldy.current.unwrap().as_ptr()).data.information)};
-        dbg!(&worldy);
-    }
+
+fn main(){ //TEST
+    let data = RoomData{information: 125};
+    let mut worldy = WorldCursor::new(data);
+    let new_data = RoomData{information: 15};
+    worldy.add_north(new_data);
+    let new_data = RoomData{information: 12};
+    worldy.traverse_north();
+    worldy.add_north(new_data);
+    worldy.traverse_south();
+    unsafe{println!("{}", (*worldy.current.unwrap().as_ptr()).data.information)};
+    dbg!(&worldy);
 }
