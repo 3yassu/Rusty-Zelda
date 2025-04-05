@@ -11,7 +11,7 @@ pub struct Item {
 }
 
 impl Item{
-    pub fn new(id: u32, cost: i32, count: Option<i32>, collision: bool, location: (Option<i32>, Option<i32>)) -> Self { 
+    pub fn new(id: u32, cost: i32, count: Option<u32>, collision: bool, location: (Option<i32>, Option<i32>)) -> Self { 
         Self{id, cost, count, collision, location}
     }
 
@@ -36,7 +36,7 @@ impl Item{
         }
     }
 
-    pub fn use_item(&mut self, location: (i32, i32), rupee: &mut i32) { //use weapons
+    pub fn use_item(&mut self, location: (u32, u32), rupee: &mut i32) -> u8{ //use weapons
         match self.id {
             0 => println!("use sword"),
             3 => println!("use shield"),
@@ -47,6 +47,7 @@ impl Item{
             32 => println!("use small key"), //may be incorrect behavior
             _ => println!("unimplemented item...")
         }
+        0
     }
 
     pub fn is_disposable(&self) -> bool{
@@ -56,7 +57,11 @@ impl Item{
         }
     }
 
-    pub fn count_remove(&mut self){self.count -=1;}
+    pub fn count_remove(&mut self){
+        if let Some(count) = self.count.as_mut(){*count -= 1;}
+    }
+    
+    pub fn count(&self) -> &Option<u32>{&self.count}
 
 
 }

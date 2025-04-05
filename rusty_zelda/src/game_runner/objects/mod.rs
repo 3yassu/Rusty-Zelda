@@ -1,5 +1,5 @@
-mod item;
-mod felix;
-mod npc;
-mod world_runner;
-mod room_data;
+pub mod item;
+pub mod felix;
+pub mod npc;
+pub mod world_runner;
+pub mod room_data;
