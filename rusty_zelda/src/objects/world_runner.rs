@@ -172,3 +172,68 @@ impl WorldCursor{ //instantiation and adding code
         }
     }
 }
+impl WorldCursor{
+    fn clear(&mut self){ //WANNA CHANGE TO ITERATIVE (also add functionanitly to put some metadata in a file for save states)
+        self.current = None; //makes current None so it doesn't become a dangling pointer
+        unsafe{ //dereferencing raw pointers is unsafe!!!
+            if self.traverse.is_some(){ //Not doing anything if None 😋! (only for case of self.traverse being None)
+                let mut direction_vec: Vec<Connector> = vec![]; //Initialize vector to hold all direction that are some (it yelled at me for not adding = vec![] 🙁)
+                direction_vec.push(self.traverse);
+                loop { //create scope to implicitly drop box at end
+                    let mut con_vec: Vec<Connector> = vec![];//convec to deal with borrow checker
+                    for dir in direction_vec{
+                        let boxed = Box::from_raw(dir.unwrap().as_ptr()); //Box up the pointer [and it's item] (so rust does all the dealocation for us LOL)
+                        if let Some(north) = boxed.north{ //if north is not None
+                            (*north.as_ptr()).south = None; //set the norths south to None (so there's no dangling ponter)
+                            con_vec.push(boxed.north) //push the north val to convec
+                        }
+                        if let Some(south) = boxed.south{ //SEE NORTH >:(
+                            (*south.as_ptr()).north = None;
+                            con_vec.push(boxed.south);
+                        }
+                        if let Some(east) = boxed.east{ //SEE NORTH >:(
+                            (*east.as_ptr()).west = None;
+                            con_vec.push(boxed.east);
+                        }
+                        if let Some(west) = boxed.west{ //SEE NORTH >:(
+                            (*west.as_ptr()).east = None;
+                            con_vec.push(boxed.west);
+                        }
+                        if let Some(up) = boxed.up{ //SEE NORTH >:(
+                            (*up.as_ptr()).down = None;
+                            con_vec.push(boxed.up);
+                        }
+                        if let Some(down) = boxed.down{ //SEE NORTH >:(
+                            (*down.as_ptr()).up = None;
+                            con_vec.push(boxed.down);
+                        }
+                    }
+                    if con_vec.is_empty(){break;}//if nothing was added to con_vec then break
+                    else{direction_vec = con_vec;}//otherwise direction_vec set to con_vec
+                } //THIS DEALOCATED THE BOX  L O L, we could not include the {} and add drop(boxed); your choice idk...
+            }
+        }        
+    }
+}
+impl Drop for WorldCursor{ //it gets mad if I didn't implement a drop function :( that's not always the case ig it's just STUPID
+    fn drop(&mut self){
+        self.clear();//recursively remove from the traverse
+    } //even if traverse didn't get removed it goes out of scope HERE and gets DROPPED muahhahha
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn tester(){ //TEST
+        let data = RoomData{information: 125};
+        let mut worldy = WorldCursor::new(data);
+        let new_data = RoomData{information: 15};
+        worldy.add_north(new_data);
+        let new_data = RoomData{information: 12};
+        worldy.traverse_north();
+        worldy.add_north(new_data);
+        worldy.traverse_south();
+        unsafe{println!("{}", (*worldy.current.unwrap().as_ptr()).data.information)};
+        dbg!(&worldy);
+    }
+}
