@@ -12,29 +12,28 @@ const ROOM_HEIGHT: u32 = 352;
 const MAP_WIDTH: usize = 16;
 const MAP_HEIGHT: usize = 11;
 
-fn room_creation(){
+fn room_creation() -> objects::room_data::RoomData{
     //initialize spawn room and room data
-    let room1data = RoomData::Hostile(HostileRoomData::new(
-        player_spawn: (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0); //this is shitty
-        dungeon: Vec<Vec<u8>>  = vec! [
-           vec! [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //add vec! to each line eyassu
-           vec! [1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
-           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           vec! [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
-           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           vec! [1, 2, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 2, 1],
-           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           vec! [1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
-           vec! [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           vec! [1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
-           vec! [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ];
-        enemy_vec = vec![];
-        item_vec = vec![];
-    ));
+    objects::room_data::RoomData::Hostile(objects::room_data::HostileRoomData::new(
+        (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //this is shitty
+        vec![
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //add vec! to each line eyassu
+           vec![1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 2, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 2, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ],
+        vec!(),
+        vec!(),
+    ))
 }
-
-let world = WorldCursor::new(room1data);
+static mut world: objects::world_runner::WorldCursor = objects::world_runner::WorldCursor::new(room_creation());
 
 struct Player { //could be in felix 
     x: f32, y: f32, speed: f32, size: u32,
@@ -54,7 +53,7 @@ impl Player {
         for (cx, cy) in corners {
             let tile_x = (cx/TILE_SIZE as f32) as usize;
             let tile_y = (cy/TILE_SIZE as f32) as usize;
-            if world.get_curr().dungeon[tile_y][tile_x] % 2 == 1 {return true};
+            unsafe{if world.get_curr()[tile_y][tile_x] % 2 == 1 {return true};}
         }
         false
     }
@@ -105,19 +104,19 @@ fn main() -> Result <(), String> {
 
         let new_x = player.x + dx; let new_y = player.y + dy;
 
-        if !in_collision(new_x, player.y, player.size as f32) {
+        if !Player::in_collision(new_x, player.y, player.size as f32) {
             player.x = new_x;
         }
-        if !in_collision(player.x, new_y, player.size as f32){
+        if !Player::in_collision(player.x, new_y, player.size as f32){
             player.y = new_y;
         }
 
         canvas.set_draw_color(Color::RGB(0,0,0));
         canvas.clear();
-
+        unsafe{
         for y in 0..MAP_HEIGHT{
             for x in 0..MAP_WIDTH{
-                let tile = world.get_curr().dungeon[y][x];
+                let tile = world.get_curr()[y][x];
                 let color = match tile{
                     0 => Color::RGB(255, 51, 0),
                     1 => Color::RGB(128, 0, 0),
@@ -132,6 +131,7 @@ fn main() -> Result <(), String> {
                         TILE_SIZE, TILE_SIZE,
                 ));
             }
+        }
         }
 
         canvas.set_draw_color(Color::RGB(255, 179, 26));
