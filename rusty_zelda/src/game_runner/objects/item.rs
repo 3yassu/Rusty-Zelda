@@ -14,8 +14,8 @@ impl Item{
         Self{id, cost, collision, location}
     }
 
-    pub fn on_pickup(){ //on pick-up of essential items
-        match id {//only bare-bones implementing essential items
+    pub fn on_pickup(&self){ //on pick-up of essential items
+        match self.id {//only bare-bones implementing essential items
             0 => println!("add sword to inventory"), 
             3 => println!("add shield to inventory"),
             5 => println!("add boomerang to inventory"),

@@ -18,6 +18,7 @@ impl Shopkeeper {
     //shopkeeper and items lose visibility after felix has get_item animation
 }
 
+#[derive(Debug)]
 pub struct Enemy {
     item_on_kill: item::Item,
     id: u32,
