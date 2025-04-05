@@ -272,19 +272,6 @@ impl WorldCursor{ //instantiation and adding code
     }
 }
 impl WorldCursor{
-    pub fn get_curr(&self) -> &Vec<Vec<u8>>{
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &(*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => &shop.dungeon,
-                        room_data::RoomData::Hostile(hostile) => &hostile.dungeon,
-                    }
-                },
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-    }
     fn clear(&mut self){ //WANNA CHANGE TO ITERATIVE (also add functionanitly to put some metadata in a file for save states)
         self.current = None; //makes current None so it doesn't become a dangling pointer
         unsafe{ //dereferencing raw pointers is unsafe!!!
@@ -325,6 +312,34 @@ impl WorldCursor{
                 } //THIS DEALOCATED THE BOX  L O L, we could not include the {} and add drop(boxed); your choice idk...
             }
         }        
+    }
+}
+impl WorldCursor{
+    pub fn get_curr(&self) -> &Vec<Vec<u8>>{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &(*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => &shop.dungeon,
+                        room_data::RoomData::Hostile(hostile) => &hostile.dungeon,
+                    }
+                },
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
+    pub fn access_spawn(&self) -> &(f32, f32){
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &(*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => shop.access_spawn(),
+                        room_data::RoomData::Hostile(hostile) => hostile.access_spawn(),
+                    }
+                },
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
     }
 }
 impl Drop for WorldCursor{ //it gets mad if I didn't implement a drop function :( that's not always the case ig it's just STUPID
