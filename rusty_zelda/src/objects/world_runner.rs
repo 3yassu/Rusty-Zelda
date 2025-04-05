@@ -86,6 +86,107 @@ impl WorldCursor{ //traverse implementation (I wanted to seperate for readabilit
         }
     }
 }
+impl WorldCursor{
+    pub fn set_connector(&mut self){//lets you put the connector at a position
+        self.current = self.traverse;
+    }
+    pub fn connect_north(&mut self){
+        unsafe{
+            match &mut self.traverse{
+                Some(ptr) => {
+                    match &mut (*ptr.as_ptr()).north{
+                        None => (*ptr.as_ptr()).north = self.current,
+                        _ => panic!("RoomOverflowError: [WorldCursor].connect_north() Tried to undo connection!")
+                    }
+                    if let Some(current) = self.current{
+                        (*current.as_ptr()).south = Some(*ptr);
+                    }
+                }
+                None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
+            }
+        }
+    }
+    pub fn connect_south(&mut self){
+        unsafe{
+            match &mut self.traverse{
+                Some(ptr) => {
+                    match &mut (*ptr.as_ptr()).south{
+                        None => (*ptr.as_ptr()).south = self.current,
+                        _ => panic!("RoomOverflowError: [WorldCursor].connect_north() Tried to undo connection!")
+                    }
+                    if let Some(current) = self.current{
+                        (*current.as_ptr()).north = Some(*ptr);
+                    }
+                }
+                None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
+            }
+        }
+    }
+    pub fn connect_east(&mut self){
+        unsafe{
+            match &mut self.traverse{
+                Some(ptr) => {
+                    match &mut (*ptr.as_ptr()).east{
+                        None => (*ptr.as_ptr()).east = self.current,
+                        _ => panic!("RoomOverflowError: [WorldCursor].connect_north() Tried to undo connection!")
+                    }
+                    if let Some(current) = self.current{
+                        (*current.as_ptr()).west = Some(*ptr);
+                    }
+                }
+                None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
+            }
+        }
+    }
+    pub fn connect_west(&mut self){
+        unsafe{
+            match &mut self.traverse{
+                Some(ptr) => {
+                    match &mut (*ptr.as_ptr()).west{
+                        None => (*ptr.as_ptr()).west = self.current,
+                        _ => panic!("RoomOverflowError: [WorldCursor].connect_north() Tried to undo connection!")
+                    }
+                    if let Some(current) = self.current{
+                        (*current.as_ptr()).east = Some(*ptr);
+                    }
+                }
+                None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
+            }
+        }
+    }
+    pub fn connect_up(&mut self){
+        unsafe{
+            match &mut self.traverse{
+                Some(ptr) => {
+                    match &mut (*ptr.as_ptr()).up{
+                        None => (*ptr.as_ptr()).up = self.current,
+                        _ => panic!("RoomOverflowError: [WorldCursor].connect_north() Tried to undo connection!")
+                    }
+                    if let Some(current) = self.current{
+                        (*current.as_ptr()).down = Some(*ptr);
+                    }
+                }
+                None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
+            }
+        }
+    }
+    pub fn connect_down(&mut self){
+        unsafe{
+            match &mut self.traverse{
+                Some(ptr) => {
+                    match &mut (*ptr.as_ptr()).down{
+                        None => (*ptr.as_ptr()).down = self.current,
+                        _ => panic!("RoomOverflowError: [WorldCursor].connect_north() Tried to undo connection!")
+                    }
+                    if let Some(current) = self.current{
+                        (*current.as_ptr()).up = Some(*ptr);
+                    }
+                }
+                None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
+            }
+        }
+    }
+}
 impl WorldCursor{ //instantiation and adding code
     pub fn new(current_data: RoomData) -> Self{
         unsafe{
