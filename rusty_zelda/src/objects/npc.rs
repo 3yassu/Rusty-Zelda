@@ -1,4 +1,4 @@
-mod item;
+use super::item;
 
 //two types of npc: shopkeeper and enemy
 
@@ -33,7 +33,7 @@ impl Enemy {
     }
     //enemy movement
     pub fn move_enemy(&mut self, x: i32, y: i32){
-        self.location.0 +=x; self.location.1 += y;
+        self.location.0 += x; self.location.1 += y;
     }
     //enemy ai -- attacks need to be based on enemy id/type. 
 }

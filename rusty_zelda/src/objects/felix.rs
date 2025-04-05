@@ -1,4 +1,4 @@
-mod item;
+use super::item;
 pub struct Felix{ //Name of character (Fe)lix RedOx haha!
     inventory: Vec<Item>,
     health_bar: u8, //2*(heart count)

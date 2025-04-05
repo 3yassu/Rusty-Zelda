@@ -1,6 +1,6 @@
 use std::ptr::NonNull; //EWWW NONNULL POINTER BLEH :P
-mod item;
-mod npc;
+use super::item;
+use super::npc;
 
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
 struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 directions
