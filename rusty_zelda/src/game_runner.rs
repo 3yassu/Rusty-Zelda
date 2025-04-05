@@ -1,5 +1,5 @@
 mod objects;
-
+use objects::{world_runner::WorldCursor, room_data::{RoomData, HostileRoomData}};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
@@ -14,7 +14,7 @@ const MAP_HEIGHT: usize = 11;
 
 fn room_creation() -> objects::room_data::RoomData{
     //initialize spawn room and room data
-    objects::room_data::RoomData::Hostile(objects::room_data::HostileRoomData::new(
+    RoomData::Hostile(HostileRoomData::new(
         (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //this is shitty
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //add vec! to each line eyassu
@@ -35,7 +35,7 @@ fn room_creation() -> objects::room_data::RoomData{
 }
 struct Player { //could be in felix 
     x: f32, y: f32, speed: f32, size: u32,
-    world: objects::world_runner::WorldCursor
+    world: WorldCursor
 }
 
 impl Player {
@@ -72,7 +72,7 @@ pub fn bain() -> Result <(), String> {
     let mut player = Player {
         x: TILE_SIZE as f32 * 2.0, y: TILE_SIZE as f32 * 2.0,
         speed: 2.0, size: TILE_SIZE / 2,
-        world: objects::world_runner::WorldCursor::new(room_creation())
+        world: WorldCursor::new(room_creation())
     };
 
     'running: loop{
