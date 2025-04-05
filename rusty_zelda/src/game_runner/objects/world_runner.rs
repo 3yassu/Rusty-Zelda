@@ -1,6 +1,7 @@
 use std::ptr::NonNull; //EWWW NONNULL POINTER BLEH :P
 use super::item;
 use super::npc;
+use super::room_data;
 
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
 struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 directions
@@ -16,19 +17,6 @@ impl Room{//impl new for Room (debating on wanting to initialize with no data or
     pub fn new(data: RoomData) -> Self{//if I don't include data add functions that add the individual data pieces
         Self{data, north: None, south: None, east: None, west: None, up: None, down: None}
     }
-}
-#[derive(Debug)]
-pub struct ShopRoomData{//room item info & image data
-    //dimensions: (i32, i32),
-    shopkeeper: Shopkeeper::new() //shopkeeper handles items, etc
-}
-
-#[derive(Debug)]
-pub struct RoomData{
-    //dimensions: (i32, i32),
-    enemies: Vec<Enemy::new()>,
-    items: Vec<Item::new()>,
-    teleports: Vec<(i32, i32)> //special teleports in the middle of room
 }
 type Connector = Option<NonNull<Room>>;//connector type is Option of a NonNull of a Room;
 #[derive(Debug)]

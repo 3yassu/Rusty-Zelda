@@ -1,9 +1,9 @@
 use super::item;
 pub struct Felix{ //Name of character (Fe)lix RedOx haha!
-    inventory: Vec<Item>,
+    inventory: Vec<item::Item>,
     health_bar: u8, //2*(heart count)
     rupee_balance: i32,
-    hand: (Option<Item>, Option<Item>),
+    hand: (Option<item::Item>, Option<item::Item>),
     location: (i32, i32),
 }
 impl Felix{
@@ -14,11 +14,11 @@ impl Felix{
         self.location.0 += x; self.location.1 += y;
     }
     pub fn use_hand_a(&mut self){
-        if let Some(item) = self.hand.1.as_mut(){
+        if let Some(item) = self.hand.0.as_mut(){
             item.use_item(self.location, self.rupee_balance);
             if item.is_disposable(){
                 if item.count_remove() == 0 {
-                    item = None;
+                    self.hand.1 = None;
                 }
             }
         }
@@ -28,7 +28,7 @@ impl Felix{
             item.use_item(self.location, self.rupee_balance);
             if item.is_disposable(){
                 if item.count_remove() == 0 {
-                    item = None;
+                    self.hand. = None;
                 }
             }
         }

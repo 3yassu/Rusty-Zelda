@@ -14,10 +14,10 @@ impl GameRunner{
                 //sdl2::Keyboard
             //}
         //}
-    //}
+    }
 }
 impl GameRunner{
     pub fn render(&mut self){ //maybe make sub_functions for render to make code more readable
-         
+        let two = 1+1;
     }
 }
