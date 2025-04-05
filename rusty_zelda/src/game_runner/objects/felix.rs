@@ -25,7 +25,7 @@ impl Felix{
     }
     pub fn use_hand_b(&mut self){
         if let Some(item) = self.hand.1.as_mut(){
-            item.use_item(self.location, self.rupee_balance);
+            item.use_item(self.location, &mut self.rupee_balance);
             if item.is_disposable(){
                 if item.count_remove() == 0 {
                     self.hand.1 = None;
