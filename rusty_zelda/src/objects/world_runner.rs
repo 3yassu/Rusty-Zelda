@@ -234,15 +234,19 @@ impl Drop for WorldCursor{ //it gets mad if I didn't implement a drop function :
 }
 
 
-fn main(){ //TEST
-    let data = RoomData{information: 125};
-    let mut worldy = WorldCursor::new(data);
-    let new_data = RoomData{information: 15};
-    worldy.add_north(new_data);
-    let new_data = RoomData{information: 12};
-    worldy.traverse_north();
-    worldy.add_north(new_data);
-    worldy.traverse_south();
-    unsafe{println!("{}", (*worldy.current.unwrap().as_ptr()).data.information)};
-    dbg!(&worldy);
+#[cfg(test)]
+mod test {
+    #[test]
+    fn tester(){ //TEST
+        let data = RoomData{information: 125};
+        let mut worldy = WorldCursor::new(data);
+        let new_data = RoomData{information: 15};
+        worldy.add_north(new_data);
+        let new_data = RoomData{information: 12};
+        worldy.traverse_north();
+        worldy.add_north(new_data);
+        worldy.traverse_south();
+        unsafe{println!("{}", (*worldy.current.unwrap().as_ptr()).data.information)};
+        dbg!(&worldy);
+    }
 }
