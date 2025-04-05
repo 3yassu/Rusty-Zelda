@@ -25,7 +25,6 @@ pub struct Enemy {
     collision: bool,
     ignore_room_collision: bool,
     location: (i32, i32),
-    movement_type: u8,
     //animations
 }
 
