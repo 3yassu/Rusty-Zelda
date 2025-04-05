@@ -1,6 +1,4 @@
 use std::ptr::NonNull; //EWWW NONNULL POINTER BLEH :P
-use super::item;
-use super::npc;
 use super::room_data;
 
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
