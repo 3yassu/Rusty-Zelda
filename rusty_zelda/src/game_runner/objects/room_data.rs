@@ -1,6 +1,7 @@
 //Nothing for now :)
 use super::item;
 use super::npc;
+#[derive(Debug)]
 pub enum RoomData{
     Shop(ShopRoomData),
     Hostile(HostileRoomData)
