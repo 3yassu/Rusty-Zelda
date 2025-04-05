@@ -10,7 +10,7 @@ pub enum RoomData{
 pub struct ShopRoomData{//room item info & image data
     dimensions: (usize, usize),
     player_spawn: (f32, f32),
-    dungeon: [[u8; dimensions.0]; dimensions.1],
+    dungeon: Vec<Vec<u8>>,
     shopkeeper: npc::Shopkeeper //shopkeeper handles items, etc
 }
 
@@ -18,7 +18,7 @@ pub struct ShopRoomData{//room item info & image data
 pub struct HostileRoomData{
     dimensions: (usize, usize),
     player_spawn: (f32, f32),
-    dungeon: [[u8; dimensions.0]; dimensions.1],
+    dungeon: Vec<Vec<u8>>,
     enemies: Vec<npc::Enemy>,
     items: Vec<item::Item>
 }
