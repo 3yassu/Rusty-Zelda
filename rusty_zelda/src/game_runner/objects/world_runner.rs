@@ -354,13 +354,13 @@ impl WorldCursor{
     }
 }
 impl WorldCursor{
-    pub fn get_curr(&self) -> &Vec<Vec<u8>>{
+    pub fn get_curr(&mut self) -> &mut Vec<Vec<u8>>{
         unsafe{
             match self.current{
                 Some(room) => {
-                    match &(*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => &shop.dungeon,
-                        room_data::RoomData::Hostile(hostile) => &hostile.dungeon,
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => &mut shop.dungeon,
+                        room_data::RoomData::Hostile(hostile) => &mut hostile.dungeon,
                     }
                 },
                 None => panic!("[WorldCursor].get_curr() tried to get None....")
