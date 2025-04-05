@@ -2,8 +2,8 @@
 use super::item;
 use super::npc;
 pub enum RoomData{
-    ShopRoomData,
-    HostileRoomData
+    Shop(ShopRoomData),
+    Hostile(HostileRoomData)
 }
 #[derive(Debug)]
 pub struct ShopRoomData{//room item info & image data
