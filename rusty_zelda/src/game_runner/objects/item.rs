@@ -35,8 +35,8 @@ impl Item{
         }
     }
 
-    pub fn use_item(location: (i32, i32)) { //use weapons
-        match id {
+    pub fn use_item(&mut self, location: (i32, i32), rupee: &mut i32) { //use weapons
+        match self.id {
             0 => println!("use sword"),
             3 => println!("use shield"),
             5 => println!("use boomerang"),
