@@ -23,3 +23,24 @@ rev = "2024.05.24" # release 2024.05.24 # to check for a new one, check https://
 
 [target.'cfg(windows)'.package.metadata.vcpkg.target]
 x86_64-pc-windows-msvc = { triplet = "x64-windows-static-md" }
+
+[package.metadata.vita]
+# A unique identifier for your project. 9 chars, alphanumeric.
+title_id = "RUSTAPP01"
+# A title that will be shown on a bubble. Optional, will take the crate name as the default
+title_name = "My application"
+# Optional. A path to static files relative to the project.
+assets = "static"
+# Optional, this is the default
+build_std = "std,panic_unwind"
+# Optional, this is the default
+vita_make_fself_flags = ["-s"]
+# Optional, this is the default
+vita_mksfoex_flags = ["-d", "ATTRIBUTE2=12"]
+
+[package.metadata.vita.profile.dev]
+# Strips symbols from the vita elf in dev profile. Optional, default is false
+strip_symbols = true
+[package.metadata.vita.profile.release]
+# Strips symbols from the vita elf in release profile. Optional, default is true
+strip_symbols = true

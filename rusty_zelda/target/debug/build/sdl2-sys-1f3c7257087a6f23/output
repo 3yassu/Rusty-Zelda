@@ -1,7 +1,7 @@
 cargo:include=C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sdl2-sys-0.37.0\SDL\include
-cargo:rustc-link-search=native=C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
+cargo:rustc-link-search=native=C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
 cargo:rustc-link-lib=SDL2-static
-cargo:rustc-link-search=native=C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
+cargo:rustc-link-search=native=C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
 cargo:rustc-link-lib=SDL2_image-static
 cargo:rustc-link-lib=tiff
 cargo:rustc-link-lib=zlib
@@ -15,7 +15,7 @@ cargo:rustc-link-lib=libwebp
 cargo:rustc-link-lib=libsharpyuv
 cargo:rustc-link-lib=SDL2-static
 cargo:rustc-link-lib=libpng16
-cargo:rustc-link-search=native=C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
+cargo:rustc-link-search=native=C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
 cargo:rustc-link-lib=SDL2_ttf
 cargo:rustc-link-lib=SDL2-static
 cargo:rustc-link-lib=freetype
@@ -25,7 +25,7 @@ cargo:rustc-link-lib=bz2
 cargo:rustc-link-lib=brotlidec
 cargo:rustc-link-lib=brotlienc
 cargo:rustc-link-lib=brotlicommon
-cargo:rustc-link-search=native=C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
+cargo:rustc-link-search=native=C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
 cargo:rustc-link-lib=SDL2_mixer-static
 cargo:rustc-link-lib=libwavpack
 cargo:rustc-link-lib=SDL2-static
@@ -33,7 +33,7 @@ cargo:rustc-link-lib=vorbisenc
 cargo:rustc-link-lib=vorbisfile
 cargo:rustc-link-lib=vorbis
 cargo:rustc-link-lib=ogg
-cargo:rustc-link-search=native=C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
+cargo:rustc-link-search=native=C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\vcpkg\installed\x64-windows-static-md\lib
 cargo:rustc-link-lib=SDL2_gfx
 cargo:rustc-link-lib=SDL2-static
 cargo:rustc-link-lib=shell32

@@ -1,5 +1,5 @@
 mod objects;
-use objects::{felix::Felix, item, npc::{Enemy, Shopkeeper}, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor};
+use objects::{felix::Felix, item, npc::{Enemy, Shopkeeper}, room_data::{self, HostileRoomData, RoomData}, world_runner::WorldCursor};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
@@ -100,22 +100,23 @@ impl Player {
         for (cx, cy) in corners {
             let tile_x = (cx/TILE_SIZE as f32) as usize;
             let tile_y = (cy/TILE_SIZE as f32) as usize;
-            if self.world.get_curr()[tile_y][tile_x] == 2 {
+            let room_dungeon;
+            match self.world.get_curr(){
+                RoomData::Shop(shop) => room_dungeon = &shop.dungeon,
+                RoomData::Hostile(hostile) => room_dungeon = &hostile.dungeon,
+            }
+            if room_dungeon[tile_y][tile_x] == 2 {
                 if (cx < 64.0) {return Some('l'); //right loading zone... etc
                 }else if (cx > 448.0) {return Some('r');
                 }else if (cy < 64.0) {return Some('n');
                 }else {return Some('s');}
             }
-            
         }
         None
     }
-    fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>){
-        self.world.move_enemy(canvas, keep_going, item_corner);
-    }
 }
 
-pub fn bain() -> Result <(), String> {
+pub fn run() -> Result <(), String> {
     let mut going = true;
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
@@ -151,12 +152,21 @@ pub fn bain() -> Result <(), String> {
 	if player.felix.health_bar <= 0 { break 'running;}
         //this could maybe be migrated to a Player function
         let mut keys = event_pump.keyboard_state();
-        let a = player.world.get_en_col(); let mut item_rect: Rect = Rect::new(0, 0, 0, 0);
-
+        let room_dungeon;
+        match player.world.get_curr(){
+            RoomData::Shop(shop) => room_dungeon = &shop.dungeon,
+            RoomData::Hostile(hostile) => room_dungeon = &hostile.dungeon,
+        }
+        let mut item_rect = Rect::new(0, 0, 0, 0);
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Space){
             item_rect = player.felix.use_hand_a();
         }
-        player.felix.move_felix(&mut keys, &player.world.get_curr(), &a, true, &mut canvas);
+        let room_enemy;
+        match player.world.get_curr(){
+            RoomData::Shop(shop) => room_enemy = vec!(),
+            RoomData::Hostile(hostile) => room_enemy = hostile.get_enemy_col(),
+        }
+        player.felix.move_felix(&mut keys, room_dungeon, &room_enemy, true, &mut canvas);
 
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
@@ -188,7 +198,12 @@ pub fn bain() -> Result <(), String> {
         canvas.clear();
         for y in 0..MAP_HEIGHT{
             for x in 0..MAP_WIDTH{
-                let tile = player.world.get_curr()[y][x];
+                let two_room_dungeon;
+                match player.world.get_curr(){
+                    RoomData::Shop(shop) => two_room_dungeon = &shop.dungeon,
+                    RoomData::Hostile(hostile) => two_room_dungeon = &hostile.dungeon,
+                }
+                let tile = two_room_dungeon[y][x];
                 let color = match tile{
                     0 => Color::RGB(255, 51, 0),
                     1 => Color::RGB(128, 0, 0),
@@ -209,15 +224,23 @@ pub fn bain() -> Result <(), String> {
         let _ = canvas.fill_rect(player.felix.rect());
         canvas.set_draw_color(Color::RGB(0, 0, 0)); 
         let _ = canvas.fill_rect(item_rect);
-	if player.world.is_hostile(){
+	if let RoomData::Hostile(hostile) = player.world.get_curr_mut(){
 		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
         let mut x: usize = 0;
         if (rand::rng().random_range(0..=10) == 1) {going = false;}
-        if let Some(d) = &mut player.felix.hand.0{
-            if let Some(b) = d.get_col(){
-                player.move_enemy(&mut canvas, going, &vec!(b));
-            }else{player.move_enemy(&mut canvas, going, &vec!());}
-        }else{player.move_enemy(&mut canvas, going, &vec!());}
+        let enemy_len = hostile.enemies.len();
+        let mut remove_vec = vec!();
+        for i in 0..enemy_len{
+            let living: bool;
+            if let Some(d) = &mut player.felix.hand.0{
+                if let Some(b) = d.get_col(){
+                    living = hostile.enemies[i].move_enemy(&hostile.dungeon, true, going, &vec!(b));
+                }else{living = hostile.enemies[i].move_enemy(&hostile.dungeon, true, going, &vec!());}
+            }else{living = hostile.enemies[i].move_enemy(&hostile.dungeon, true, going, &vec!());}
+            if !living {remove_vec.push(i)}
+            let _ = canvas.fill_rect(hostile.enemies[i].rect());
+        }
+        for dead in remove_vec {hostile.enemies.remove(dead);}
         going = true;
 	}
         canvas.present();
