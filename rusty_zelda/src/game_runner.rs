@@ -1,5 +1,5 @@
 mod objects;
-use objects::{felix::Felix, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor, npc::{Shopkeeper, Enemy}};
+use objects::{felix::Felix, item, npc::{Enemy, Shopkeeper}, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
@@ -135,7 +135,7 @@ pub fn bain() -> Result <(), String> {
     player.world.add_west(n);
 	let Some(n) = a.next() else{panic!("a");};
     player.world.add_east(n);
-
+    
     'running: loop{
         for event in event_pump.poll_iter(){
             match event {
@@ -150,13 +150,13 @@ pub fn bain() -> Result <(), String> {
 	//check if felix DIED like a dog
 	if player.felix.health_bar <= 0 { break 'running;}
         //this could maybe be migrated to a Player function
-        let keys = event_pump.keyboard_state();
-        let a = player.world.get_en_col();
-        player.felix.move_felix(keys, &player.world.get_curr(), &a, true);
-
-	if keys.is_scancode_pressed(sdl2::keyboard::Scancode::N){
-            player.felix.use_hand_a(&mut canvas);
+        let mut keys = event_pump.keyboard_state();
+        let a = player.world.get_en_col(); let mut item_rect: Rect = Rect::new(0, 0, 0, 0);
+        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Space){
+            item_rect = player.felix.use_hand_a();
         }
+        player.felix.move_felix(&mut keys, &player.world.get_curr(), &a, true, &mut canvas);
+        
 
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
@@ -207,6 +207,8 @@ pub fn bain() -> Result <(), String> {
 
         canvas.set_draw_color(Color::RGB(255, 179, 26));
         let _ = canvas.fill_rect(player.felix.rect());
+        canvas.set_draw_color(Color::RGB(0, 0, 0)); 
+        let _ = canvas.fill_rect(item_rect);
 	if player.world.is_hostile(){
 		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
         let mut x: usize = 0;
