@@ -37,7 +37,7 @@ fn room_creation() -> objects::room_data::RoomData{
 fn room_creation_2() -> objects::room_data::RoomData{ //this sucks
     //initialize spawn room and room data
     RoomData::Hostile(HostileRoomData::new(
-        (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //change spawn l8ter
+        (512.0/2.0, 352.0 /2.0), //change spawn l8ter
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -117,7 +117,9 @@ pub fn bain() -> Result <(), String> {
         speed: 2.0, size: TILE_SIZE / 2,
         world: WorldCursor::new(room_creation())
     };
+
     player.world.add_west(room_creation_2());
+
     'running: loop{
         for event in event_pump.poll_iter(){
             match event {
@@ -151,12 +153,14 @@ pub fn bain() -> Result <(), String> {
                     println!("Loading zone left");
 			player.world.traverse_west();
 			player.world.set_connector();
+			player.x = player.world.access_spawn().0; player.y = player.world.access_spawn().1;
                 }
                 'r' => {
                     // Move right if possible
                     println!("Loading zone right");
 			player.world.traverse_east();
 			player.world.set_connector();
+			player.x = player.world.access_spawn().0; player.y = player.world.access_spawn().1;
                 }
                 'n' => {
                     // Move north if possible
