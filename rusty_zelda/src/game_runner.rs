@@ -52,8 +52,28 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
         vec!(),
         vec!(),
     ));
+	
+	let room_three: RoomData =     RoomData::Hostile(HostileRoomData::new(
+        	(0.0, 0.0), //change spawn l8ter
+        vec![
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+           vec![1, 2, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ],
+        vec!(),
+        vec!(),
+    ));
     vector.push(room_contain); //LOLL.. for now implementation is to do this as many times as possible
     vector.push(room_two);
+	vector.push(room_three);
     vector
 }
 
@@ -122,6 +142,8 @@ pub fn bain() -> Result <(), String> {
     };
     let Some(n) = a.next() else{panic!("a");};
     player.world.add_west(n);
+	let Some(n) = a.next() else{panic!("a");};
+    player.world.add_east(n);
 
     'running: loop{
         for event in event_pump.poll_iter(){
