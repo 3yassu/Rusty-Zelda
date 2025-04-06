@@ -17,7 +17,7 @@ fn room_creation() -> objects::room_data::RoomData{
     RoomData::Hostile(HostileRoomData::new(
         (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //this is shitty
         vec![
-           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //add vec! to each line eyassu
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
            vec![1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
@@ -33,6 +33,29 @@ fn room_creation() -> objects::room_data::RoomData{
         vec!(),
     ))
 }
+
+fn room_creation_2() -> objects::room_data::RoomData{ //this sucks
+    //initialize spawn room and room data
+    RoomData::Hostile(HostileRoomData::new(
+        (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //change spawn l8ter
+        vec![
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ],
+        vec!(),
+        vec!(),
+    ))
+}
+
 struct Player { //could be in felix 
     x: f32, y: f32, speed: f32, size: u32,
     world: WorldCursor
@@ -56,6 +79,26 @@ impl Player {
         }
         false
     }
+    fn in_loading_zone(&mut self) -> Option<char> {
+        let corners = [
+            (self.x, self.y),
+            (self.x + self.size as f32 - 1.0, self.y),
+            (self.x, self.y + self.size as f32 - 1.0),
+            (self.x + self.size as f32 - 1.0, self.y + self.size as f32 - 1.0),
+        ];
+        for (cx, cy) in corners {
+            let tile_x = (cx/TILE_SIZE as f32) as usize;
+            let tile_y = (cy/TILE_SIZE as f32) as usize;
+            if self.world.get_curr()[tile_y][tile_x] == 2 {
+                if (cx < 64.0) {return Some('l'); //right loading zone... etc
+                }else if (cx > 448.0) {return Some('r');
+                }else if (cy < 64.0) {return Some('n');
+                }else {return Some('s');}
+            }
+            
+        }
+        None
+    }
 }
 
 pub fn bain() -> Result <(), String> {
@@ -74,7 +117,7 @@ pub fn bain() -> Result <(), String> {
         speed: 2.0, size: TILE_SIZE / 2,
         world: WorldCursor::new(room_creation())
     };
-
+    player.world.add_west(room_creation_2());
     'running: loop{
         for event in event_pump.poll_iter(){
             match event {
@@ -100,6 +143,31 @@ pub fn bain() -> Result <(), String> {
         }
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Down){
             dy += player.speed;
+        }
+
+	if let Some(loading_zone) = player.in_loading_zone() {
+            match loading_zone {
+                'l' => {
+                    println!("Loading zone left");
+			player.world.traverse_west();
+			player.world.set_connector();
+                }
+                'r' => {
+                    // Move right if possible
+                    println!("Loading zone right");
+			player.world.traverse_east();
+			player.world.set_connector();
+                }
+                'n' => {
+                    // Move north if possible
+                    println!("Loading zone north");
+                }
+                's' => {
+                    // Move south if possible
+                    println!("Loading zone south");
+                }
+                _ => {}
+            }
         }
 
         let new_x = player.x + dx; let new_y = player.y + dy;
