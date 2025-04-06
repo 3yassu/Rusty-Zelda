@@ -356,7 +356,20 @@ impl WorldCursor{
     }
 }
 impl WorldCursor{
-    pub fn get_curr(&mut self) -> &mut Vec<Vec<u8>>{
+    pub fn get_curr(&mut self) -> &Vec<Vec<u8>>{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => &shop.dungeon,
+                        room_data::RoomData::Hostile(hostile) => &hostile.dungeon,
+                    }
+                },
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
+    pub fn get_curr_mut(&mut self) -> &mut Vec<Vec<u8>>{
         unsafe{
             match self.current{
                 Some(room) => {
@@ -395,6 +408,19 @@ impl WorldCursor{
             }
         }
     }
+    pub fn get_enemy_ref(&mut self) -> &Vec<npc::Enemy>{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => panic!("Ugh. (self.get_enemy())"),
+                        room_data::RoomData::Hostile(hostile) => hostile.get_enemy_ref(),
+                    }
+                }
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
     pub fn is_hostile(&mut self) -> bool{
         unsafe{
             match self.current{
@@ -406,6 +432,24 @@ impl WorldCursor{
                 }
                 None => panic!("[WorldCursor].get_curr() tried to get None....")
             }
+        }
+    }
+    pub fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){ //WANT TO GET OUT OF HERE PLEASE!
+        let mut x: &mut Vec<npc::Enemy> = &mut vec!();
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Hostile(hostile) => x = hostile.get_enemy(),
+                        _ => ()
+                    }
+                }
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+        for i in x{
+            let _ = canvas.fill_rect(i.rect());
+            i.move_enemy(self.get_curr(),true);
         }
     }
 }

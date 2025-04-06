@@ -48,7 +48,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(Enemy::keese((128, 160))), //enemy vec
+        vec!(Enemy::keese((128.0, 160.0))), //enemy vec
         vec!(),
     ));
 	
@@ -108,6 +108,9 @@ impl Player {
             
         }
         None
+    }
+    fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){
+        self.world.move_enemy(canvas);
     }
 }
 
@@ -174,7 +177,6 @@ pub fn bain() -> Result <(), String> {
 
         canvas.set_draw_color(Color::RGB(0,0,0));
         canvas.clear();
-        unsafe{
         for y in 0..MAP_HEIGHT{
             for x in 0..MAP_WIDTH{
                 let tile = player.world.get_curr()[y][x];
@@ -193,16 +195,14 @@ pub fn bain() -> Result <(), String> {
                 ));
             }
         }
-        }
 
         canvas.set_draw_color(Color::RGB(255, 179, 26));
         let _ = canvas.fill_rect(player.felix.rect());
 	if player.world.is_hostile(){
 		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
-		for i in player.world.get_enemy(){
-			let _ = canvas.fill_rect(i.rect());
-			i.move_enemy(1, 1, true);
-		}
+        let mut x: usize = 0;
+        {x = player.world.get_enemy().len()}
+        player.move_enemy(&mut canvas);
 	}
         canvas.present();
         std::thread::sleep(Duration::from_millis(16));
