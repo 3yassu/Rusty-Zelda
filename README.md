@@ -8,7 +8,7 @@ beloved NEET nest.
 
 currently in version 0.0.0
 
-Collaborators:
-Eyassu Mongalo, KU CS, Math '27
+Collaborators: <br>
+Eyassu Mongalo, KU CS, Math '27 <br>
 Lillian Brooks-Kanost, KU CS '27
 
