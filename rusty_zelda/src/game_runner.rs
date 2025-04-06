@@ -110,8 +110,8 @@ impl Player {
         }
         None
     }
-    fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool){
-        self.world.move_enemy(canvas, keep_going);
+    fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>){
+        self.world.move_enemy(canvas, keep_going, item_corner);
     }
 }
 
@@ -213,7 +213,11 @@ pub fn bain() -> Result <(), String> {
 		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
         let mut x: usize = 0;
         if (rand::rng().random_range(0..=10) == 1) {going = false;}
-        player.move_enemy(&mut canvas, going);
+        if let Some(d) = &mut player.felix.hand.0{
+            if let Some(b) = d.get_col(){
+                player.move_enemy(&mut canvas, going, &vec!(b));
+            }else{player.move_enemy(&mut canvas, going, &vec!());}
+        }else{player.move_enemy(&mut canvas, going, &vec!());}
         going = true;
 	}
         canvas.present();

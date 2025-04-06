@@ -40,17 +40,17 @@ impl Enemy {
         Self{item_on_kill, id, hp, collision, ignore_room_collision, location, size, speed, delta_pos}
     }
     //enemy movement
-    pub fn move_enemy(&mut self, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool){
+    pub fn move_enemy(&mut self, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>) -> bool{
             let possible_x: f32 = rand::rng().random_range(0..=2) as f32;
             let possible_y: f32 = rand::rng().random_range(0..=2) as f32;
         match self.id{
-            40 => {self.move_stalfos(possible_x, possible_y, world_dungeon, can_move)},
-            30 => {self.move_keese(possible_x, possible_y, world_dungeon, can_move, keep_going)},
-            _ => ()
+            40 => {self.move_stalfos(possible_x, possible_y, world_dungeon, can_move, keep_going, item_corner)},
+            30 => {self.move_keese(possible_x, possible_y, world_dungeon, can_move, keep_going, item_corner)},
+            _ => (true)
         }
     }
-    fn move_keese(&mut self, x: f32, y: f32, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool){
-        if !can_move {return;}
+    fn move_keese(&mut self, x: f32, y: f32, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>) -> bool{
+        if !can_move {return true;}
         if !keep_going{
             self.delta_pos = (0.0, 0.0);
             match x {
@@ -65,47 +65,53 @@ impl Enemy {
             }
         }
         let (new_x, new_y) = (self.location.0 as f32 + self.delta_pos.0, self.location.1 as f32 + self.delta_pos.1);
-
-        if !Enemy::enem_collision(new_x, self.location.1, self.size as f32, world_dungeon){
-            self.location.0 = new_x;
+        match self.enem_collision(new_x, self.location.1, self.size as f32, world_dungeon, item_corner){
+            Some(a) => if !a{self.location.0 = new_x;},
+            None => return false,
         }
-        if !Enemy::enem_collision(self.location.0, new_y, self.size as f32, world_dungeon){
-            self.location.1 = new_y;
+        match self.enem_collision(self.location.0, new_y, self.size as f32, world_dungeon, item_corner){
+            Some(a) => if !a{self.location.1 = new_y},
+            None => return false,
         }
+        true
     }
-    fn move_stalfos(&mut self, x: f32, y: f32, world_dungeon: &Vec<Vec<u8>>, can_move: bool){
-        if !can_move {return;}
-        let (mut dx, mut dy): (f32, f32) = (0.0, 0.0);
-        match x {
-            2.0 => dx += self.speed,
-            1.0 => dx -= self.speed,
-            _ => ()
+    fn move_stalfos(&mut self, x: f32, y: f32, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>) -> bool{
+        if !can_move {return true;}
+        if !keep_going{
+            self.delta_pos = (0.0, 0.0);
+            match x {
+                2.0 => self.delta_pos.0 += self.speed,
+                1.0 => self.delta_pos.0 -= self.speed,
+                _ => ()
+            }
+            match y {
+                2.0 => self.delta_pos.1 += self.speed,
+                1.0 => self.delta_pos.1 -= self.speed,
+                _ => ()       
+            }
         }
-        match y {
-            2.0 => dy += self.speed,
-            1.0 => dy -= self.speed,
-            _ => ()            
+        let (new_x, new_y) = (self.location.0 as f32 + self.delta_pos.0, self.location.1 as f32 + self.delta_pos.1);
+        match self.enem_collision(new_x, self.location.1, self.size as f32, world_dungeon, item_corner){
+            Some(a) => if !a{self.location.0 = new_x;},
+            None => return false,
         }
-        let (new_x, new_y) = (self.location.0 as f32 + dx, self.location.1 as f32 + dy);
-
-        if !Enemy::enem_collision(new_x, self.location.1, self.size as f32, world_dungeon){
-            self.location.0 = new_x;
+        match self.enem_collision(self.location.0, new_y, self.size as f32, world_dungeon, item_corner){
+            Some(a) => if !a{self.location.1 = new_y},
+            None => return false,
         }
-        if !Enemy::enem_collision(self.location.0, new_y, self.size as f32, world_dungeon){
-            self.location.1 = new_y;
-        }
+        true
     }
     //enemy ai -- attacks need to be based on enemy id/type.
     pub fn keese(location: (f32, f32)) -> Self{ //quick debug functions
-        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None), 0, 0.0), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8, speed: 2.0, delta_pos: (0.0, 0.0)}
+        Self{item_on_kill: item::Item::new(100, 0, None, false, None, 0, 0, 0.0), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8, speed: 2.0, delta_pos: (0.0, 0.0)}
     }
     pub fn stalfos(location: (f32, f32)) -> Self{ //quick debug functions
-        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None), 0, 0.0), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16, speed: 4.0, delta_pos: (0.0, 0.0)}
+        Self{item_on_kill: item::Item::new(100, 0, None, false, None, 0, 0, 0.0), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16, speed: 4.0, delta_pos: (0.0, 0.0)}
     }
     pub fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
     }
-    pub fn enem_collision(x: f32, y:f32, size: f32, world_dungeon: &Vec<Vec<u8>>) -> bool{
+    pub fn enem_collision(&mut self, x: f32, y:f32, size: f32, world_dungeon: &Vec<Vec<u8>>, item_corner: &Vec<[(f32, f32); 4]>) -> Option<bool>{
         let corners: [(f32, f32); 4]  = [
             (x, y),
             (x + size - 1.0, y),
@@ -115,9 +121,18 @@ impl Enemy {
         for (cx, cy) in corners {
             let tile_x = (cx/TILE_SIZE as f32) as usize;
             let tile_y = (cy/TILE_SIZE as f32) as usize;
-            if world_dungeon[tile_y][tile_x] % 2 == 1 {return true};
+            if world_dungeon[tile_y][tile_x] != 0 {return Some(true)};
+            for enemy in item_corner{
+                if (cx >= enemy[1].0 && cx <= enemy[3].0) 
+                && 
+                (cy >= enemy[1].1 && cy <= enemy[2].1){
+                self.hp -= 1;
+                if self.hp == 0 {return None;}
+                return Some(true);
+                }
+            }
         }
-        false
+        Some(false)
     }
     pub fn get_col(&self) -> [(f32, f32); 4]{
         [self.location, 

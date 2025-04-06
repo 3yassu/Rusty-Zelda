@@ -21,7 +21,7 @@ pub struct Felix{ //Name of character (Fe)lix RedOx haha!
 }
 impl Felix{
     pub fn new(size: u32, location: (f32, f32)) -> Self {
-        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (Some(item::Item::new(0,0,None,true,(None, None),8, 1.0)), None), size, speed: 2.0}
+        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (Some(item::Item::new(0,0,None,true,None,20, 10, 1.0)), None), size, speed: 2.0}
     }
     pub fn move_felix(&mut self, keys: &mut sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>, can_move: bool, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){ //Keep in mind this function doesn't teleport felix but add's given position
         if !can_move {return;}
@@ -51,8 +51,10 @@ impl Felix{
     pub fn use_hand_a(&mut self) -> Rect{
 	//render sword for like 3 seconds
 	if let Some(_) = self.hand.0{
-        println!("Go, Smart Sword. I choose you!");
-		self.hand.0.as_mut().unwrap().rect((self.location.0 - 8.0, self.location.1 + 5.0))
+        //println!("Go, Smart Sword. I choose you!");
+        let unwrap = self.hand.0.as_mut().unwrap();
+        let size_l = unwrap.size_l as f32; let size_w = unwrap.size_w as f32;
+		unwrap.rect((self.location.0 - size_w as f32, self.location.1))
 	}else{panic!("AHH");}
 
 	//enable collision
@@ -93,11 +95,10 @@ impl Felix{
             let tile_y = (cy/TILE_SIZE as f32) as usize;
             if world_dungeon[tile_y][tile_x] % 2 == 1 {return true};
             for enemy in enem_corner{
-                if (cx <= enemy[1].0 && cx <= enemy[3].0) 
+                if (cx >= enemy[1].0 && cx <= enemy[3].0) 
                 && 
-                (cy <= enemy[1].1 && cy <= enemy[2].1){
-		self.health_bar -= 1;
-		println!("ouch");
+                (cy >= enemy[1].1 && cy <= enemy[2].1){
+            //self.health_bar -= 1;
                 return true;
                 }
             }
