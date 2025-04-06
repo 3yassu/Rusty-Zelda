@@ -434,7 +434,7 @@ impl WorldCursor{
             }
         }
     }
-    pub fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){ //WANT TO GET OUT OF HERE PLEASE!
+    pub fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool){ //WANT TO GET OUT OF HERE PLEASE!
         let mut x: &mut Vec<npc::Enemy> = &mut vec!();
         unsafe{
             match self.current{
@@ -449,7 +449,7 @@ impl WorldCursor{
         }
         for i in x{
             let _ = canvas.fill_rect(i.rect());
-            i.move_enemy(self.get_curr(),true);
+            i.move_enemy(self.get_curr(),true, keep_going);
         }
     }
 }

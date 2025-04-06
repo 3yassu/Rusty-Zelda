@@ -5,6 +5,7 @@ use sdl2::keyboard::Keycode;
 use std::time::Duration;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
+use rand::Rng;
 
 const TILE_SIZE: u32 = 32;
 const ROOM_WIDTH: u32 = 512;
@@ -109,12 +110,13 @@ impl Player {
         }
         None
     }
-    fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){
-        self.world.move_enemy(canvas);
+    fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool){
+        self.world.move_enemy(canvas, keep_going);
     }
 }
 
 pub fn bain() -> Result <(), String> {
+    let mut going = true;
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
     let window = video_subsystem
@@ -201,8 +203,9 @@ pub fn bain() -> Result <(), String> {
 	if player.world.is_hostile(){
 		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
         let mut x: usize = 0;
-        {x = player.world.get_enemy().len()}
-        player.move_enemy(&mut canvas);
+        if (rand::rng().random_range(0..=10) == 1) {going = false;}
+        player.move_enemy(&mut canvas, going);
+        going = true;
 	}
         canvas.present();
         std::thread::sleep(Duration::from_millis(16));
