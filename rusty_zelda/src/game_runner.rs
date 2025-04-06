@@ -17,7 +17,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
     //LATER WILL IMPLEMENT FILE IO TO CHECK A TXT FILE.
     let mut vector: Vec<RoomData> = vec!();
     let room_contain = RoomData::Hostile(HostileRoomData::new(
-        (256.0, 272.0), 
+        (256.0, 272.0), //this var is completely useless now fun fact
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
@@ -116,7 +116,7 @@ pub fn bain() -> Result <(), String> {
     let mut a = room_creation().into_iter();
     let Some(n) = a.next() else{panic!("a");};
     let mut player = Player {
-        x: TILE_SIZE as f32 * 2.0, y: TILE_SIZE as f32 * 2.0,
+        x: 256.0, y: 272.0,
         speed: 2.0, size: TILE_SIZE / 2,
         world: WorldCursor::new(n)
     };
