@@ -97,10 +97,10 @@ impl Enemy {
     }
     //enemy ai -- attacks need to be based on enemy id/type.
     pub fn keese(location: (f32, f32)) -> Self{ //quick debug functions
-        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None)), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8, speed: 2.0, delta_pos: (0.0, 0.0)}
+        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None), 0, 0.0), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8, speed: 2.0, delta_pos: (0.0, 0.0)}
     }
     pub fn stalfos(location: (f32, f32)) -> Self{ //quick debug functions
-        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None)), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16, speed: 4.0, delta_pos: (0.0, 0.0)}
+        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None), 0, 0.0), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16, speed: 4.0, delta_pos: (0.0, 0.0)}
     }
     pub fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
@@ -118,5 +118,11 @@ impl Enemy {
             if world_dungeon[tile_y][tile_x] % 2 == 1 {return true};
         }
         false
+    }
+    pub fn get_col(&self) -> [(f32, f32); 4]{
+        [self.location, 
+        (self.location.0 + (self.size as f32) - 1.0, self.location.1), 
+        (self.location.0, self.location.1 + (self.size as f32) - 1.0), 
+        (self.location.0 + (self.size as f32) - 1.0, self.location.1 + (self.size as f32) - 1.0)]
     }
 }
