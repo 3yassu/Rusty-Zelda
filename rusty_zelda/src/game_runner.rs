@@ -30,8 +30,8 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //no overworld access ... yet!
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(),
-        vec!(),
+        vec!(), //enemy vec
+        vec!(), //item vec
     ));
     let room_two: RoomData =     RoomData::Hostile(HostileRoomData::new(
         (0.0, 0.0), //change spawn l8ter
@@ -48,7 +48,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(),
+        vec!(Enemy::keese((128, 160))), //enemy vec
         vec!(),
     ));
 	
