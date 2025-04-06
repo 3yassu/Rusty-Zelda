@@ -1,5 +1,5 @@
 mod objects;
-use objects::{world_runner::WorldCursor, room_data::{RoomData, HostileRoomData}};
+use objects::{felix::Felix, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
@@ -78,34 +78,23 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
 
 
 struct Player { //could be in felix 
-    x: f32, y: f32, speed: f32, size: u32,
+    felix: Felix,
     world: WorldCursor
 }
 
 impl Player {
-    fn rect(&self) -> Rect{
-        Rect::new(self.x as i32, self.y as i32, self.size, self.size)
+    fn new(felix: Felix, world: WorldCursor) -> Self{
+        Self{felix, world}
     }
-    fn in_collision(&mut self, x: f32, y:f32, size: f32) -> bool {
-        let corners = [
-            (x, y),
-            (x + size - 1.0, y),
-            (x, y + size - 1.0),
-            (x + size - 1.0, y + size - 1.0),
-        ];
-        for (cx, cy) in corners {
-            let tile_x = (cx/TILE_SIZE as f32) as usize;
-            let tile_y = (cy/TILE_SIZE as f32) as usize;
-            if self.world.get_curr()[tile_y][tile_x] % 2 == 1 {return true};
-        }
-        false
+    fn rect(&self) -> Rect{
+        Rect::new(self.felix.location.0 as i32, self.felix.location.1 as i32, self.felix.size, self.felix.size)
     }
     fn in_loading_zone(&mut self) -> Option<char> {
         let corners = [
-            (self.x, self.y),
-            (self.x + self.size as f32 - 1.0, self.y),
-            (self.x, self.y + self.size as f32 - 1.0),
-            (self.x + self.size as f32 - 1.0, self.y + self.size as f32 - 1.0),
+            (self.felix.location.0, self.felix.location.1),
+            (self.felix.location.0 + self.felix.size as f32 - 1.0, self.felix.location.1),
+            (self.felix.location.0, self.felix.location.1 + self.felix.size as f32 - 1.0),
+            (self.felix.location.0 + self.felix.size as f32 - 1.0, self.felix.location.1 + self.felix.size as f32 - 1.0),
         ];
         for (cx, cy) in corners {
             let tile_x = (cx/TILE_SIZE as f32) as usize;
@@ -134,11 +123,9 @@ pub fn bain() -> Result <(), String> {
     let mut event_pump = sdl_context.event_pump()?;
     let mut a = room_creation().into_iter();
     let Some(n) = a.next() else{panic!("a");};
-    let mut player = Player {
-        x: 256.0, y: 272.0,
-        speed: 2.0, size: TILE_SIZE / 2,
-        world: WorldCursor::new(n)
-    };
+    let mut fel = Felix::new(TILE_SIZE/2, (256.0, 272.0));
+    let mut cursor = WorldCursor::new(n); 
+    let mut player = Player::new(fel, cursor);
     let Some(n) = a.next() else{panic!("a");};
     player.world.add_west(n);
 	let Some(n) = a.next() else{panic!("a");};
@@ -157,53 +144,32 @@ pub fn bain() -> Result <(), String> {
         }
         //this could maybe be migrated to a Player function
         let keys = event_pump.keyboard_state();
-        let mut dx = 0.0; let mut dy = 0.0; //let mut (dx, dy): (f32, f32) =
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Left){
-            dx -= player.speed;
-        }
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Right){
-            dx += player.speed;
-        }
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Up){
-            dy -= player.speed;
-        }
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Down){
-            dy += player.speed;
-        }
+        player.felix.move_felix(keys, &player.world.get_curr(),&vec!());
 
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
                 'l' => {
 			player.world.traverse_west();
 			player.world.set_connector();
-			player.x = 432.0; player.y = 176.0;
+			player.felix.location.0 = 432.0; player.felix.location.1 = 176.0;
                 }
                 'r' => {
 			player.world.traverse_east();
 			player.world.set_connector();
-			player.x = 80.0; player.y = 176.0;
+			player.felix.location.0 = 80.0; player.felix.location.1 = 176.0;
                 }
                 'n' => {
                     	player.world.traverse_north();
 			player.world.set_connector();
-			player.x = 256.0; player.y = 272.0;
+			player.felix.location.0 = 256.0; player.felix.location.1 = 272.0;
                 }
                 's' => {
                     	player.world.traverse_south();
 			player.world.set_connector();
-			player.x = 256.0; player.y = 80.0;
+			player.felix.location.0 = 256.0; player.felix.location.1 = 80.0;
                 }
                 _ => {}
             }
-        }
-
-        let new_x = player.x + dx; let new_y = player.y + dy;
-
-        if !player.in_collision(new_x, player.y, player.size as f32) {
-            player.x = new_x;
-        }
-        if !player.in_collision(player.x, new_y, player.size as f32){
-            player.y = new_y;
         }
 
         canvas.set_draw_color(Color::RGB(0,0,0));
@@ -230,7 +196,7 @@ pub fn bain() -> Result <(), String> {
         }
 
         canvas.set_draw_color(Color::RGB(255, 179, 26));
-        let _ = canvas.fill_rect(player.rect());
+        let _ = canvas.fill_rect(player.felix.rect());
         canvas.present();
         std::thread::sleep(Duration::from_millis(16));
     }
