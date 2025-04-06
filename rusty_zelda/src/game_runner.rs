@@ -5,7 +5,6 @@ use sdl2::keyboard::Keycode;
 use std::time::Duration;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
-use std::vec::IntoIter;
 
 const TILE_SIZE: u32 = 32;
 const ROOM_WIDTH: u32 = 512;
@@ -158,7 +157,7 @@ pub fn bain() -> Result <(), String> {
         }
         //this could maybe be migrated to a Player function
         let keys = event_pump.keyboard_state();
-        let mut dx = 0.0; let mut dy = 0.0; 
+        let mut dx = 0.0; let mut dy = 0.0; //let mut (dx, dy): (f32, f32) =
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Left){
             dx -= player.speed;
         }

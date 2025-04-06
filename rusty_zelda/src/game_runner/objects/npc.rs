@@ -22,6 +22,7 @@ impl Shopkeeper {
 pub struct Enemy {
     item_on_kill: item::Item,
     id: u32,
+    hp: u32,
     collision: bool,
     ignore_room_collision: bool,
     location: (u32, u32),
@@ -30,8 +31,8 @@ pub struct Enemy {
 }
 
 impl Enemy {
-    pub fn new(item_on_kill: item::Item, id: u32, collision: bool, ignore_room_collision: bool, location: (u32, u32), size: u32) -> Self {
-        Self{item_on_kill, id, collision, ignore_room_collision, location, size}
+    pub fn new(item_on_kill: item::Item, id: u32, hp: u32, collision: bool, ignore_room_collision: bool, location: (u32, u32), size: u32) -> Self {
+        Self{item_on_kill, id, hp, collision, ignore_room_collision, location, size}
     }
     //enemy movement
     pub fn move_enemy(&mut self, x: u32, y: u32, pos: bool){
@@ -41,8 +42,11 @@ impl Enemy {
         }
     }
     //enemy ai -- attacks need to be based on enemy id/type.
-    pub fn keese(location: (u32, u32)) -> Self{
-        Self{item_on_kill: item::Item::new(0, 0, None, false, (None, None)), id: 30, collision: true, ignore_room_collision: true, location, size: 8}
+    pub fn keese(location: (u32, u32)) -> Self{ //quick debug functions
+        Self{item_on_kill: item::Item::new(0, 0, None, false, (None, None)), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8}
+    }
+    pub fn stalfos(location: (u32, u32)) -> Self{ //quick debug functions
+        Self{item_on_kill: item::Item::new(0, 0, None, false, (None, None)), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16}
     }
     pub fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
