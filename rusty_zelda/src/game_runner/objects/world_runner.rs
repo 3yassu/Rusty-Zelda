@@ -434,7 +434,7 @@ impl WorldCursor{
             }
         }
     }
-    pub fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool){ //WANT TO GET OUT OF HERE PLEASE!
+    pub fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>){ //WANT TO GET OUT OF HERE PLEASE!
         let mut x: &mut Vec<npc::Enemy> = &mut vec!();
         unsafe{
             match self.current{
@@ -447,9 +447,16 @@ impl WorldCursor{
                 None => panic!("[WorldCursor].get_curr() tried to get None....")
             }
         }
-        for i in x{
-            let _ = canvas.fill_rect(i.rect());
-            i.move_enemy(self.get_curr(),true, keep_going);
+        let a = x.len();
+        let mut remove_vec: Vec<usize> = vec!();
+        for i in 0..a{
+            let _ = canvas.fill_rect(x[i].rect());
+            if !x[i].move_enemy(self.get_curr(),true, keep_going, item_corner){
+                remove_vec.push(i);
+            };
+        }
+        for i in remove_vec{
+            x.remove(i);
         }
     }
     pub fn get_en_col(&mut self) -> Vec<[(f32, f32); 4]>{
