@@ -20,7 +20,7 @@ pub struct Felix{ //Name of character (Fe)lix RedOx haha!
 }
 impl Felix{
     pub fn new(size: u32, location: (f32, f32)) -> Self {
-        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (None, None), size, speed: 2.0}
+        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (Some(item::new(0,0,None,true,(None, None),8, 1)), None), size, speed: 2.0}
     }
     pub fn move_felix(&mut self, keys: sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>, can_move: bool){ //Keep in mind this function doesn't teleport felix but add's given position
         if !can_move {return;}
@@ -46,7 +46,16 @@ impl Felix{
             self.location.1 = new_y;
         }
     }
-    pub fn use_hand_a(&mut self){
+
+    pub fn use_hand_a(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){
+	//render sword for like 3 seconds
+	if let Some(_) = self.hand.0{
+		canvas.set_draw_color(Color::RGB(255, 255, 255)); 
+		let _ = canvas.fill_rect(self.hand.0.as_mut().unwrap().rect(self.location));
+	}
+
+	//enable collision
+	/*
         if let Some(item) = self.hand.0.as_mut(){
             item.use_item(self.location, &mut self.rupee_balance);
             if item.is_disposable(){
@@ -55,7 +64,7 @@ impl Felix{
                     self.hand.0 = None;
                 }
             }
-        }
+        } */
     }
     pub fn use_hand_b(&mut self){
         if let Some(item) = self.hand.1.as_mut(){

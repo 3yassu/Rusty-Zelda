@@ -153,7 +153,11 @@ pub fn bain() -> Result <(), String> {
         let keys = event_pump.keyboard_state();
         let a = player.world.get_en_col();
         player.felix.move_felix(keys, &player.world.get_curr(), &a, true);
-	
+
+	if keys.is_scancode_pressed(sdl2::keyboard::Scancode::N){
+            player.felix.use_hand_a(&mut canvas);
+        }
+
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
                 'l' => {
@@ -179,7 +183,7 @@ pub fn bain() -> Result <(), String> {
                 _ => {}
             }
         }
-
+	
         canvas.set_draw_color(Color::RGB(0,0,0));
         canvas.clear();
         for y in 0..MAP_HEIGHT{
