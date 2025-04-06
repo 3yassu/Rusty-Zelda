@@ -1,5 +1,5 @@
 mod objects;
-use objects::{felix::Felix, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor};
+use objects::{felix::Felix, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor, npc::{Shopkeeper, Enemy}};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
@@ -30,8 +30,8 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //no overworld access ... yet!
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(),
-        vec!(),
+        vec!(), //enemy vec
+        vec!(), //item vec
     ));
     let room_two: RoomData =     RoomData::Hostile(HostileRoomData::new(
         (0.0, 0.0), //change spawn l8ter
@@ -48,7 +48,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(),
+        vec!(Enemy::keese((128, 160))), //enemy vec
         vec!(),
     ));
 	
@@ -144,7 +144,7 @@ pub fn bain() -> Result <(), String> {
         }
         //this could maybe be migrated to a Player function
         let keys = event_pump.keyboard_state();
-        player.felix.move_felix(keys, &player.world.get_curr(),&vec!(), true);
+        player.felix.move_felix(keys, &player.world.get_curr(),&vec!());
 
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
