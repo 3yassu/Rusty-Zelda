@@ -10,30 +10,30 @@ const ROOM_HEIGHT: u32 = 352;
 const MAP_WIDTH: usize = 16;
 const MAP_HEIGHT: usize = 11;
 pub struct Felix{ //Name of character (Fe)lix RedOx haha!
-    inventory: Vec<item::Item>,
-    health_bar: u8, //2*(heart count)
-    rupee_balance: i32,
-    hand: (Option<item::Item>, Option<item::Item>),
-    location: (f32, f32),
-    size: u32,
-    speed: f32,
+    pub inventory: Vec<item::Item>,
+    pub health_bar: u8, //2*(heart count)
+    pub rupee_balance: i32,
+    pub hand: (Option<item::Item>, Option<item::Item>),
+    pub location: (f32, f32),
+    pub size: u32,
+    pub speed: f32,
 }
 impl Felix{
-    pub fn new(size: u32) -> Self {
-        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, hand: (None, None), location: (0.0, 0.0), size, speed: 0.0}
+    pub fn new(size: u32, location: (f32, f32)) -> Self {
+        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (None, None), size, speed: 2.0}
     }
     pub fn move_felix(&mut self, keys: sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>){ //Keep in mind this function doesn't teleport felix but add's given position
         let (mut dx, mut dy): (f32, f32) = (0.0, 0.0);
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Left){
             dx -= self.speed;
         }
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Right){
+        else if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Right){
             dx += self.speed;
         }
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Up){
+        else if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Up){
             dy -= self.speed;
         }
-        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Down){
+        else if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Down){
             dy += self.speed;
         }
         let (new_x, new_y) = (self.location.0 as f32 + dx, self.location.1 as f32 + dy);
@@ -67,7 +67,7 @@ impl Felix{
             }
         }
     }
-    fn rect(&self) -> Rect{
+    pub fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
     }
     fn in_collision(x: f32, y:f32, size: f32, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>) -> bool {
