@@ -1,7 +1,7 @@
-C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\debug\deps\libcfg_if-e7014ee817a05abd.rmeta: C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs
+C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\debug\deps\libcfg_if-e7014ee817a05abd.rmeta: C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs
 
-C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\debug\deps\libcfg_if-e7014ee817a05abd.rlib: C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs
+C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\debug\deps\libcfg_if-e7014ee817a05abd.rlib: C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs
 
-C:\Users\eyass\Programming Projects\RUST\Rusty-Zelda\rusty_zelda\target\debug\deps\cfg_if-e7014ee817a05abd.d: C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs
+C:\Users\eyass\Programming_Projects\RUST\Rusty-Zelda\rusty_zelda\target\debug\deps\cfg_if-e7014ee817a05abd.d: C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs
 
 C:\Users\eyass\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cfg-if-1.0.0\src\lib.rs:

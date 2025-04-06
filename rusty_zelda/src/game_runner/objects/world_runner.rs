@@ -1,10 +1,10 @@
 use std::ptr::NonNull; //EWWW NONNULL POINTER BLEH :P
-use super::room_data;
+use super::room_data::RoomData;
 use super::npc;
 
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
 struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 directions
-    pub data: room_data::RoomData, //(has data{room item info & image data}
+    pub data: RoomData, //(has data{room item info & image data}
     north: Connector,
     east: Connector,
     south: Connector,
@@ -13,7 +13,7 @@ struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 direction
     down: Connector //might change to below?
 }
 impl Room{//impl new for Room (debating on wanting to initialize with no data or give it data?)
-    pub fn new(data: room_data::RoomData) -> Self{//if I don't include data add functions that add the individual data pieces
+    pub fn new(data: RoomData) -> Self{//if I don't include data add functions that add the individual data pieces
         Self{data, north: None, south: None, east: None, west: None, up: None, down: None}
     }
 }
@@ -175,13 +175,13 @@ impl WorldCursor{
     }
 }
 impl WorldCursor{ //instantiation and adding code
-    pub fn new(current_data: room_data::RoomData) -> Self{
+    pub fn new(current_data: RoomData) -> Self{
         unsafe{
             let room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(current_data))));
             Self{current: Some(room), traverse: Some(room)}            
         }
     }
-    pub fn add_north(&mut self, room_data: room_data::RoomData){
+    pub fn add_north(&mut self, room_data: RoomData){
         unsafe{// Though NonNull::new() isn't unsafe NonNull::new_unchecked is (It's faster as it bypasses safety checks just don't be stupid)
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data)))); //create new_room with room info (debating on giving it a room instead of room_data)
             match &mut self.traverse{ //mutable reference for match since I wanna keep self.traverse as it is
@@ -196,7 +196,7 @@ impl WorldCursor{ //instantiation and adding code
             }// Debating on adding a paniic if you try to traverse while on None ^^ (if not will change to if let format)
         }
     }
-    pub fn add_south(&mut self, room_data: room_data::RoomData){ //CHECK add_north
+    pub fn add_south(&mut self, room_data: RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -211,7 +211,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_east(&mut self, room_data: room_data::RoomData){ //CHECK add_north
+    pub fn add_east(&mut self, room_data: RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -226,7 +226,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_west(&mut self, room_data: room_data::RoomData){ //CHECK add_north
+    pub fn add_west(&mut self, room_data: RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -242,7 +242,7 @@ impl WorldCursor{ //instantiation and adding code
             
         }
     }
-    pub fn add_up(&mut self, room_data: room_data::RoomData){ //CHECK add_north
+    pub fn add_up(&mut self, room_data: RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -257,7 +257,7 @@ impl WorldCursor{ //instantiation and adding code
             }
         }
     }
-    pub fn add_down(&mut self, room_data: room_data::RoomData){ //CHECK add_north
+    pub fn add_down(&mut self, room_data: RoomData){ //CHECK add_north
         unsafe{
             let new_room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
             match &mut self.traverse{
@@ -356,118 +356,18 @@ impl WorldCursor{
     }
 }
 impl WorldCursor{
-    pub fn get_curr(&mut self) -> &Vec<Vec<u8>>{
+    pub fn get_curr(&self) -> &RoomData{
         unsafe{
             match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => &shop.dungeon,
-                        room_data::RoomData::Hostile(hostile) => &hostile.dungeon,
-                    }
-                },
+                Some(room) => &(*room.as_ptr()).data,
                 None => panic!("[WorldCursor].get_curr() tried to get None....")
             }
         }
     }
-    pub fn get_curr_mut(&mut self) -> &mut Vec<Vec<u8>>{
+    pub fn get_curr_mut(&mut self) -> &mut RoomData{
         unsafe{
             match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => &mut shop.dungeon,
-                        room_data::RoomData::Hostile(hostile) => &mut hostile.dungeon,
-                    }
-                },
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-    }
-    pub fn access_spawn(&mut self) -> &mut (f32, f32){
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => shop.access_spawn(),
-                        room_data::RoomData::Hostile(hostile) => hostile.access_spawn(),
-                    }
-                },
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-    }
-    pub fn get_enemy(&mut self) -> &mut Vec<npc::Enemy>{
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => panic!("Ugh. (self.get_enemy())"),
-                        room_data::RoomData::Hostile(hostile) => hostile.get_enemy(),
-                    }
-                }
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-    }
-    pub fn get_enemy_ref(&mut self) -> &Vec<npc::Enemy>{
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => panic!("Ugh. (self.get_enemy())"),
-                        room_data::RoomData::Hostile(hostile) => hostile.get_enemy_ref(),
-                    }
-                }
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-    }
-    pub fn is_hostile(&mut self) -> bool{
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Shop(shop) => false,
-                        room_data::RoomData::Hostile(hostile) => true,
-                    }
-                }
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-    }
-    pub fn move_enemy(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>, keep_going: bool, item_corner: &Vec<[(f32, f32); 4]>){ //WANT TO GET OUT OF HERE PLEASE!
-        let mut x: &mut Vec<npc::Enemy> = &mut vec!();
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Hostile(hostile) => x = hostile.get_enemy(),
-                        _ => ()
-                    }
-                }
-                None => panic!("[WorldCursor].get_curr() tried to get None....")
-            }
-        }
-        let a = x.len();
-        let mut remove_vec: Vec<usize> = vec!();
-        for i in 0..a{
-            let _ = canvas.fill_rect(x[i].rect());
-            if !x[i].move_enemy(self.get_curr(),true, keep_going, item_corner){
-                remove_vec.push(i);
-            };
-        }
-        for i in remove_vec{
-            x.remove(i);
-        }
-    }
-    pub fn get_en_col(&mut self) -> Vec<[(f32, f32); 4]>{
-        unsafe{
-            match self.current{
-                Some(room) => {
-                    match &mut (*room.as_ptr()).data{
-                        room_data::RoomData::Hostile(hostile) => hostile.get_col_list(),
-                        _ => panic!("[WorldCursor].get_curr() tried to get None....")
-                    }
-                }
+                Some(room) => &mut (*room.as_ptr()).data,
                 None => panic!("[WorldCursor].get_curr() tried to get None....")
             }
         }

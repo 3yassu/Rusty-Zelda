@@ -1,4 +1,4 @@
 mod game_runner;
 fn main() {
-    game_runner::bain();
+    game_runner::run();
 }
