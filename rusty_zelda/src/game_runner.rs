@@ -197,6 +197,12 @@ pub fn bain() -> Result <(), String> {
 
         canvas.set_draw_color(Color::RGB(255, 179, 26));
         let _ = canvas.fill_rect(player.felix.rect());
+	if player.world.is_hostile(){
+		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
+		for i in player.world.get_enemy(){
+			let _ = canvas.fill_rect(i.rect());
+		}
+	}
         canvas.present();
         std::thread::sleep(Duration::from_millis(16));
     }
