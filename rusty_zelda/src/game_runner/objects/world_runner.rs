@@ -235,11 +235,6 @@ impl WorldCursor{ //instantiation and adding code
                         _ => panic!("RoomOverflowError: [WorldCursor].add_west() Tried to overwrite room!")
                     }
                     (*new_room.as_ptr()).east = Some(*ptr);
-                    println!(
-                        "West room's east: {:?}, Current room's west: {:?}", 
-                        (*new_room.as_ptr()).east.map(|p| p.as_ptr()), 
-                        (*ptr.as_ptr()).west.map(|p| p.as_ptr())
-                    );
                 }
                 None => ()//panic!("ERROR: [WorldCursor] self.add_south(), tried to add south to None")
             }
