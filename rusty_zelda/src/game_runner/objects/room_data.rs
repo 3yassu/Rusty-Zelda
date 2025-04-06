@@ -30,4 +30,5 @@ impl HostileRoomData{
         Self{player_spawn, dungeon, enemies, items}
     }
     pub fn access_spawn(&mut self) -> &mut (f32, f32){&mut self.player_spawn}
+    pub fn get_enemy(&mut self) -> &mut Vec<npc::Enemy>{&mut self.enemies}
 }
