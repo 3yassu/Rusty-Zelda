@@ -3,7 +3,6 @@ use sdl2::rect::Rect;
 #[derive(Debug)]
 pub struct Item {
     id: u32,
-    //animation: links to graphics
     pub cost: i32,
     pub count: Option<u32>,
     pub collision: bool,
