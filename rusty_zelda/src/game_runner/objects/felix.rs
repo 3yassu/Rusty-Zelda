@@ -22,7 +22,8 @@ impl Felix{
     pub fn new(size: u32, location: (f32, f32)) -> Self {
         Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (None, None), size, speed: 2.0}
     }
-    pub fn move_felix(&mut self, keys: sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>){ //Keep in mind this function doesn't teleport felix but add's given position
+    pub fn move_felix(&mut self, keys: sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>, can_move: bool){ //Keep in mind this function doesn't teleport felix but add's given position
+        if !can_move {return;}
         let (mut dx, mut dy): (f32, f32) = (0.0, 0.0);
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Left){
             dx -= self.speed;

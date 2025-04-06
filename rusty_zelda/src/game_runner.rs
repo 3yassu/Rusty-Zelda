@@ -144,7 +144,7 @@ pub fn bain() -> Result <(), String> {
         }
         //this could maybe be migrated to a Player function
         let keys = event_pump.keyboard_state();
-        player.felix.move_felix(keys, &player.world.get_curr(),&vec!());
+        player.felix.move_felix(keys, &player.world.get_curr(),&vec!(), true);
 
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
