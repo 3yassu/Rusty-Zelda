@@ -14,18 +14,35 @@ pub struct Felix{ //Name of character (Fe)lix RedOx haha!
     health_bar: u8, //2*(heart count)
     rupee_balance: i32,
     hand: (Option<item::Item>, Option<item::Item>),
-    location: (u32, u32),
+    location: (f32, f32),
     size: u32,
     speed: f32,
 }
 impl Felix{
     pub fn new(size: u32) -> Self {
-        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, hand: (None, None), location: (0, 0), size, speed: 0.0}
+        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, hand: (None, None), location: (0.0, 0.0), size, speed: 0.0}
     }
-    pub fn move_felix(&mut self, x: u32, y: u32, pos: bool){ //Keep in mind this function doesn't teleport felix but add's given position
-        match pos{
-            true => {self.location.0 += x; self.location.1 += y;},
-            false => {self.location.0 -= x; self.location.1 -= y;},
+    pub fn move_felix(&mut self, keys: sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>){ //Keep in mind this function doesn't teleport felix but add's given position
+        let (mut dx, mut dy): (f32, f32) = (0.0, 0.0);
+        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Left){
+            dx -= self.speed;
+        }
+        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Right){
+            dx += self.speed;
+        }
+        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Up){
+            dy -= self.speed;
+        }
+        if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Down){
+            dy += self.speed;
+        }
+        let (new_x, new_y) = (self.location.0 as f32 + dx, self.location.1 as f32 + dy);
+
+        if !Felix::in_collision(new_x, self.location.1, self.size as f32, world_dungeon, enem_corner){
+            self.location.0 = new_x;
+        }
+        if !Felix::in_collision(self.location.0, new_y, self.size as f32, world_dungeon, enem_corner){
+            self.location.1 = new_y;
         }
     }
     pub fn use_hand_a(&mut self){
@@ -53,7 +70,7 @@ impl Felix{
     fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
     }
-    fn in_collision(x: f32, y:f32, size: f32, word_dungeon: Vec<Vec<u8>>, enem_corner: [(f32, f32); 4]) -> bool {
+    fn in_collision(x: f32, y:f32, size: f32, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>) -> bool {
         let corners: [(f32, f32); 4]  = [
             (x, y),
             (x + size - 1.0, y),
@@ -63,11 +80,13 @@ impl Felix{
         for (cx, cy) in corners {
             let tile_x = (cx/TILE_SIZE as f32) as usize;
             let tile_y = (cy/TILE_SIZE as f32) as usize;
-            if word_dungeon[tile_y][tile_x] % 2 == 1 {return true};
-            if (cx <= enem_corner[1].0 && cx <= enem_corner[3].0) 
+            if world_dungeon[tile_y][tile_x] % 2 == 1 {return true};
+            for enemy in enem_corner{
+                if (cx <= enemy[1].0 && cx <= enemy[3].0) 
                 && 
-                (cy <= enem_corner[1].1 && cy <= enem_corner[2].1){
+                (cy <= enemy[1].1 && cy <= enemy[2].1){
                 return true;
+                }
             }
         }
         false
