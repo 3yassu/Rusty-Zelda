@@ -34,13 +34,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
         vec!(),
         vec!(),
     ));
-    vector.push(room_contain); //LOLL.. for now implementation is to do this as many times as possible
-    vector
-}
-
-fn room_creation_2() -> objects::room_data::RoomData{ //this sucks
-    //initialize spawn room and room data
-    RoomData::Hostile(HostileRoomData::new(
+    let room_two: RoomData =     RoomData::Hostile(HostileRoomData::new(
         (512.0/2.0, 352.0 /2.0), //change spawn l8ter
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -57,8 +51,12 @@ fn room_creation_2() -> objects::room_data::RoomData{ //this sucks
         ],
         vec!(),
         vec!(),
-    ))
+    ));
+    vector.push(room_contain); //LOLL.. for now implementation is to do this as many times as possible
+    vector.push(room_two);
+    vector
 }
+
 
 struct Player { //could be in felix 
     x: f32, y: f32, speed: f32, size: u32,
@@ -122,8 +120,8 @@ pub fn bain() -> Result <(), String> {
         speed: 2.0, size: TILE_SIZE / 2,
         world: WorldCursor::new(n)
     };
-
-    player.world.add_west(room_creation_2());
+    let Some(n) = a.next() else{panic!("a");};
+    player.world.add_west(n);
 
     'running: loop{
         for event in event_pump.poll_iter(){
