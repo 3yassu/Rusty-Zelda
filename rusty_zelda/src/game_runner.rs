@@ -49,7 +49,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(Enemy::keese((128.0, 160.0))), //enemy vec
+        vec!(Enemy::keese((128.0, 160.0)), Enemy::keese((256.0, 126.0)), Enemy::keese((350.0, 180.0))), //enemy vec
         vec!(),
     ));
 	
