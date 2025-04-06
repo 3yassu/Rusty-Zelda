@@ -452,6 +452,19 @@ impl WorldCursor{
             i.move_enemy(self.get_curr(),true, keep_going);
         }
     }
+    pub fn get_en_col(&mut self) -> Vec<[(f32, f32); 4]>{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Hostile(hostile) => hostile.get_col_list(),
+                        _ => panic!("[WorldCursor].get_curr() tried to get None....")
+                    }
+                }
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
 }
 impl Drop for WorldCursor{ //it gets mad if I didn't implement a drop function :( that's not always the case ig it's just STUPID
     fn drop(&mut self){

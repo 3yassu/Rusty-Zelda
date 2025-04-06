@@ -151,7 +151,8 @@ pub fn bain() -> Result <(), String> {
 	if player.felix.health_bar <= 0 { break 'running;}
         //this could maybe be migrated to a Player function
         let keys = event_pump.keyboard_state();
-        player.felix.move_felix(keys, &player.world.get_curr(), player.world.get_enemy_ref(), true);
+        let a = player.world.get_en_col();
+        player.felix.move_felix(keys, &player.world.get_curr(), &a, true);
 	
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
