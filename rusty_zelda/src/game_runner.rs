@@ -17,7 +17,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
     //LATER WILL IMPLEMENT FILE IO TO CHECK A TXT FILE.
     let mut vector: Vec<RoomData> = vec!();
     let room_contain = RoomData::Hostile(HostileRoomData::new(
-        (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //this is shitty
+        (256.0, 272.0), 
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
@@ -28,14 +28,14 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
            vec![1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
            vec![1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           vec![1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+           vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //no overworld access ... yet!
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
         vec!(),
         vec!(),
     ));
     let room_two: RoomData =     RoomData::Hostile(HostileRoomData::new(
-        (512.0/2.0, 352.0 /2.0), //change spawn l8ter
+        (0.0, 0.0), //change spawn l8ter
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -153,25 +153,24 @@ pub fn bain() -> Result <(), String> {
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
                 'l' => {
-                    println!("Loading zone left");
 			player.world.traverse_west();
 			player.world.set_connector();
-			player.x = player.world.access_spawn().0; player.y = player.world.access_spawn().1;
+			player.x = 432.0; player.y = 176.0;
                 }
                 'r' => {
-                    // Move right if possible
-                    println!("Loading zone right");
 			player.world.traverse_east();
 			player.world.set_connector();
-			player.x = player.world.access_spawn().0; player.y = player.world.access_spawn().1;
+			player.x = 80.0; player.y = 176.0;
                 }
                 'n' => {
-                    // Move north if possible
-                    println!("Loading zone north");
+                    	player.world.traverse_north();
+			player.world.set_connector();
+			player.x = 256.0; player.y = 272.0;
                 }
                 's' => {
-                    // Move south if possible
-                    println!("Loading zone south");
+                    	player.world.traverse_south();
+			player.world.set_connector();
+			player.x = 256.0; player.y = 80.0;
                 }
                 _ => {}
             }
