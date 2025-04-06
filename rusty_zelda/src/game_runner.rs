@@ -152,11 +152,11 @@ pub fn bain() -> Result <(), String> {
         //this could maybe be migrated to a Player function
         let mut keys = event_pump.keyboard_state();
         let a = player.world.get_en_col(); let mut item_rect: Rect = Rect::new(0, 0, 0, 0);
+
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Space){
             item_rect = player.felix.use_hand_a();
         }
         player.felix.move_felix(&mut keys, &player.world.get_curr(), &a, true, &mut canvas);
-        
 
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
