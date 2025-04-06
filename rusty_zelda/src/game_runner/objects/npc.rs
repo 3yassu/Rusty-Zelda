@@ -30,38 +30,41 @@ pub struct Enemy {
     ignore_room_collision: bool,
     location: (f32, f32),
     size: u32,
-    speed: f32
+    speed: f32,
+    delta_pos: (f32, f32),
     //animations
 }
 
 impl Enemy {
-    pub fn new(item_on_kill: item::Item, id: u32, hp: u32, collision: bool, ignore_room_collision: bool, location: (f32, f32), size: u32, speed: f32) -> Self {
-        Self{item_on_kill, id, hp, collision, ignore_room_collision, location, size, speed}
+    pub fn new(item_on_kill: item::Item, id: u32, hp: u32, collision: bool, ignore_room_collision: bool, location: (f32, f32), size: u32, speed: f32, delta_pos: (f32, f32)) -> Self {
+        Self{item_on_kill, id, hp, collision, ignore_room_collision, location, size, speed, delta_pos}
     }
     //enemy movement
-    pub fn move_enemy(&mut self, world_dungeon: &Vec<Vec<u8>>, can_move: bool){
+    pub fn move_enemy(&mut self, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool){
             let possible_x: f32 = rand::rng().random_range(0..=2) as f32;
             let possible_y: f32 = rand::rng().random_range(0..=2) as f32;
         match self.id{
-            30 => {self.move_stalfos(possible_x, possible_y, world_dungeon, can_move)},
-            40 => {self.move_keese(possible_x, possible_y, world_dungeon, can_move)},
+            40 => {self.move_stalfos(possible_x, possible_y, world_dungeon, can_move)},
+            30 => {self.move_keese(possible_x, possible_y, world_dungeon, can_move, keep_going)},
             _ => ()
         }
     }
-    fn move_keese(&mut self, x: f32, y: f32, world_dungeon: &Vec<Vec<u8>>, can_move: bool){
+    fn move_keese(&mut self, x: f32, y: f32, world_dungeon: &Vec<Vec<u8>>, can_move: bool, keep_going: bool){
         if !can_move {return;}
-        let (mut dx, mut dy): (f32, f32) = (0.0, 0.0);
-        match x {
-            2.0 => dx += self.speed,
-            1.0 => dx -= self.speed,
-            _ => ()
+        if !keep_going{
+            self.delta_pos = (0.0, 0.0);
+            match x {
+                2.0 => self.delta_pos.0 += self.speed,
+                1.0 => self.delta_pos.0 -= self.speed,
+                _ => ()
+            }
+            match y {
+                2.0 => self.delta_pos.1 += self.speed,
+                1.0 => self.delta_pos.1 -= self.speed,
+                _ => ()       
+            }
         }
-        match y {
-            2.0 => dy += self.speed,
-            1.0 => dy -= self.speed,
-            _ => ()            
-        }
-        let (new_x, new_y) = (self.location.0 as f32 + dx, self.location.1 as f32 + dy);
+        let (new_x, new_y) = (self.location.0 as f32 + self.delta_pos.0, self.location.1 as f32 + self.delta_pos.1);
 
         if !Enemy::enem_collision(new_x, self.location.1, self.size as f32, world_dungeon){
             self.location.0 = new_x;
@@ -94,10 +97,10 @@ impl Enemy {
     }
     //enemy ai -- attacks need to be based on enemy id/type.
     pub fn keese(location: (f32, f32)) -> Self{ //quick debug functions
-        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None)), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8, speed: 2.0}
+        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None)), id: 30, collision: true, hp: 1, ignore_room_collision: true, location, size: 8, speed: 2.0, delta_pos: (0.0, 0.0)}
     }
     pub fn stalfos(location: (f32, f32)) -> Self{ //quick debug functions
-        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None)), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16, speed: 4.0}
+        Self{item_on_kill: item::Item::new(100, 0, None, false, (None, None)), id: 40, collision: true, hp: 2, ignore_room_collision: false, location, size: 16, speed: 4.0, delta_pos: (0.0, 0.0)}
     }
     pub fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
