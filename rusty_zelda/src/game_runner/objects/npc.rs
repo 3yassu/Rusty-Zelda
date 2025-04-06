@@ -7,12 +7,12 @@ pub struct Shopkeeper {
     items: Vec<item::Item>,
     //text_gen
     //item_text_gen?
-    location: (i32, i32),
+    location: (u32, u32),
     collision: bool
 }
 
 impl Shopkeeper {
-    pub fn new(items: Vec<item::Item>, location: (i32, i32), collision: bool) -> Self {
+    pub fn new(items: Vec<item::Item>, location: (u32, u32), collision: bool) -> Self {
         Self{items, location, collision}
     }
     //shopkeeper and items lose visibility after felix has get_item animation
@@ -24,17 +24,23 @@ pub struct Enemy {
     id: u32,
     collision: bool,
     ignore_room_collision: bool,
-    location: (i32, i32),
+    location: (u32, u32),
     //animations
 }
 
 impl Enemy {
-    pub fn new(item_on_kill: item::Item, id: u32, collision: bool, ignore_room_collision: bool, location: (i32, i32)) -> Self {
+    pub fn new(item_on_kill: item::Item, id: u32, collision: bool, ignore_room_collision: bool, location: (u32, u32)) -> Self {
         Self{item_on_kill, id, collision, ignore_room_collision, location}
     }
     //enemy movement
-    pub fn move_enemy(&mut self, x: i32, y: i32){
-        self.location.0 += x; self.location.1 += y;
+    pub fn move_enemy(&mut self, x: u32, y: u32, pos: bool){
+        match pos{
+            true => {self.location.0 += x; self.location.1 += y;},
+            false => {self.location.0 -= x; self.location.1 -= y;},
+        }
     }
     //enemy ai -- attacks need to be based on enemy id/type.
+    pub fn keese(location: (u32, u32)) -> Self{
+        Self{item_on_kill: item::Item::new(0, 0, None, false, (None, None)), id: 30, collision: true, ignore_room_collision: true, location}
+    }
 }
