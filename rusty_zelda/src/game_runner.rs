@@ -5,6 +5,7 @@ use sdl2::keyboard::Keycode;
 use std::time::Duration;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
+use std::vec::IntoIter;
 
 const TILE_SIZE: u32 = 32;
 const ROOM_WIDTH: u32 = 512;
@@ -12,9 +13,10 @@ const ROOM_HEIGHT: u32 = 352;
 const MAP_WIDTH: usize = 16;
 const MAP_HEIGHT: usize = 11;
 
-fn room_creation() -> objects::room_data::RoomData{
-    //initialize spawn room and room data
-    RoomData::Hostile(HostileRoomData::new(
+fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms lol...
+    //LATER WILL IMPLEMENT FILE IO TO CHECK A TXT FILE.
+    let mut vector: Vec<RoomData> = vec!();
+    let room_contain = RoomData::Hostile(HostileRoomData::new(
         (512.0 - 8.5*32.0, 352.0 - 1.5 * 32.0), //this is shitty
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -31,7 +33,9 @@ fn room_creation() -> objects::room_data::RoomData{
         ],
         vec!(),
         vec!(),
-    ))
+    ));
+    vector.push(room_contain); //LOLL.. for now implementation is to do this as many times as possible
+    vector
 }
 
 fn room_creation_2() -> objects::room_data::RoomData{ //this sucks
@@ -111,11 +115,12 @@ pub fn bain() -> Result <(), String> {
         .map_err(|e| e.to_string())?;
     let mut canvas = window.into_canvas().build().map_err(|e| e.to_string())?;
     let mut event_pump = sdl_context.event_pump()?;
-
+    let mut a = room_creation().into_iter();
+    let Some(n) = a.next() else{panic!("a");};
     let mut player = Player {
         x: TILE_SIZE as f32 * 2.0, y: TILE_SIZE as f32 * 2.0,
         speed: 2.0, size: TILE_SIZE / 2,
-        world: WorldCursor::new(room_creation())
+        world: WorldCursor::new(n)
     };
 
     player.world.add_west(room_creation_2());
