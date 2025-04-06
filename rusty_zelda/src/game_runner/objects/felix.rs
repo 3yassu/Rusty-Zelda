@@ -52,7 +52,7 @@ impl Felix{
 	//render sword for like 3 seconds
 	if let Some(_) = self.hand.0{
         println!("Go, Smart Sword. I choose you!");
-		self.hand.0.as_mut().unwrap().rect(self.location)
+		self.hand.0.as_mut().unwrap().rect((self.location.0 - 8.0, self.location.1 + 5.0))
 	}else{panic!("AHH");}
 
 	//enable collision
