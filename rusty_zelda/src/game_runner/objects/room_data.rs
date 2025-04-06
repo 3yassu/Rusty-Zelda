@@ -31,5 +31,12 @@ impl HostileRoomData{
     }
     pub fn access_spawn(&mut self) -> &mut (f32, f32){&mut self.player_spawn}
     pub fn get_enemy(&mut self) -> &mut Vec<npc::Enemy>{&mut self.enemies}
+    pub fn get_col_list(&mut self) -> Vec<[(f32, f32); 4]>{
+        let mut ret_vec: Vec<[(f32, f32); 4]> = vec!();
+        for i in &self.enemies{
+            ret_vec.push(i.get_col());
+        }
+        ret_vec
+    }
     pub fn get_enemy_ref(&mut self) -> &Vec<npc::Enemy>{&self.enemies}
 }
