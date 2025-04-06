@@ -1,5 +1,5 @@
 mod objects;
-use objects::{felix::Felix, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor};
+use objects::{felix::Felix, room_data::{HostileRoomData, RoomData}, world_runner::WorldCursor, npc::{Shopkeeper, Enemy}};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;

@@ -1,5 +1,6 @@
 use std::ptr::NonNull; //EWWW NONNULL POINTER BLEH :P
 use super::room_data;
+use super::npc;
 
 #[derive(Debug)] // <- yk what this does (derive debug allows you to say dbg!(item) and print its info, you could also impl debug trait...
 struct Room{ //Room struct has pointers (Connectors) to rooms in all 6 directions
@@ -377,6 +378,32 @@ impl WorldCursor{
                         room_data::RoomData::Hostile(hostile) => hostile.access_spawn(),
                     }
                 },
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
+    pub fn get_enemy(&mut self) -> &mut Vec<npc::Enemy>{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => panic!("Ugh. (self.get_enemy())"),
+                        room_data::RoomData::Hostile(hostile) => hostile.get_enemy(),
+                    }
+                }
+                None => panic!("[WorldCursor].get_curr() tried to get None....")
+            }
+        }
+    }
+    pub fn is_hostile(&mut self) -> bool{
+        unsafe{
+            match self.current{
+                Some(room) => {
+                    match &mut (*room.as_ptr()).data{
+                        room_data::RoomData::Shop(shop) => false,
+                        room_data::RoomData::Hostile(hostile) => true,
+                    }
+                }
                 None => panic!("[WorldCursor].get_curr() tried to get None....")
             }
         }
