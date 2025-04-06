@@ -1,6 +1,7 @@
 use super::item;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
+use sdl2::render::Canvas;
 use std::time::Duration;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
@@ -20,9 +21,9 @@ pub struct Felix{ //Name of character (Fe)lix RedOx haha!
 }
 impl Felix{
     pub fn new(size: u32, location: (f32, f32)) -> Self {
-        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (Some(item::new(0,0,None,true,(None, None),8, 1)), None), size, speed: 2.0}
+        Self{inventory: vec!(), health_bar: 6, rupee_balance: 0, location, hand: (Some(item::Item::new(0,0,None,true,(None, None),8, 1.0)), None), size, speed: 2.0}
     }
-    pub fn move_felix(&mut self, keys: sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>, can_move: bool){ //Keep in mind this function doesn't teleport felix but add's given position
+    pub fn move_felix(&mut self, keys: &mut sdl2::keyboard::KeyboardState<'_>, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>, can_move: bool, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){ //Keep in mind this function doesn't teleport felix but add's given position
         if !can_move {return;}
         let (mut dx, mut dy): (f32, f32) = (0.0, 0.0);
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Left){
@@ -47,12 +48,12 @@ impl Felix{
         }
     }
 
-    pub fn use_hand_a(&mut self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>){
+    pub fn use_hand_a(&mut self) -> Rect{
 	//render sword for like 3 seconds
 	if let Some(_) = self.hand.0{
-		canvas.set_draw_color(Color::RGB(255, 255, 255)); 
-		let _ = canvas.fill_rect(self.hand.0.as_mut().unwrap().rect(self.location));
-	}
+        println!("Go, Smart Sword. I choose you!");
+		self.hand.0.as_mut().unwrap().rect(self.location)
+	}else{panic!("AHH");}
 
 	//enable collision
 	/*
