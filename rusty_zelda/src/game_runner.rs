@@ -201,6 +201,7 @@ pub fn bain() -> Result <(), String> {
 		canvas.set_draw_color(Color::RGB(0, 0, 0)); //enemy color; change eventually
 		for i in player.world.get_enemy(){
 			let _ = canvas.fill_rect(i.rect());
+			i.move_enemy(1, 1, true);
 		}
 	}
         canvas.present();
