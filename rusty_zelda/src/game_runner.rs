@@ -78,12 +78,12 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
 }
 
 
-struct Player { //could be in felix 
+struct GameRunner { //could be in felix 
     felix: Felix,
     world: WorldCursor
 }
 
-impl Player {
+impl GameRunner {
     fn new(felix: Felix, world: WorldCursor) -> Self{
         Self{felix, world}
     }
