@@ -95,11 +95,21 @@ impl Felix{
             let tile_y = (cy/TILE_SIZE as f32) as usize;
             if world_dungeon[tile_y][tile_x] % 2 == 1 {return true};
             for enemy in enem_corner{
-                if (cx >= enemy[1].0 && cx <= enemy[3].0) 
+                if ((cx >= enemy[0].0 && cx <= enemy[1].0) 
                 && 
-                (cy >= enemy[1].1 && cy <= enemy[2].1){
-            //self.health_bar -= 1;
-                return true;
+                (cy >= enemy[0].1 && cy <= enemy[2].1)){
+                    //self.health_bar -= 1;
+                    //println!("Bouch!");
+                    return true;
+                }
+                for (ex, ey) in enemy{
+                    if ((*ex >= corners[0].0 && *ex <= corners[1].0) 
+                    && 
+                    (*ey >= corners[0].1 && *ey <= corners[2].1)){
+                        //self.health_bar -= 1;
+                        //println!("Couch!");
+                        return true;
+                    }
                 }
             }
         }

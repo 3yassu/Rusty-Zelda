@@ -123,9 +123,10 @@ impl Enemy {
             let tile_y = (cy/TILE_SIZE as f32) as usize;
             if world_dungeon[tile_y][tile_x] != 0 {return Some(true)};
             for enemy in item_corner{
-                if (cx >= enemy[1].0 && cx <= enemy[3].0) 
+                if (cx >= enemy[0].0 && cx <= enemy[1].0) 
                 && 
-                (cy >= enemy[1].1 && cy <= enemy[2].1){
+                (cy >= enemy[0].1 && cy <= enemy[2].1){
+                println!("AHH");
                 self.hp -= 1;
                 if self.hp == 0 {return None;}
                 return Some(true);
