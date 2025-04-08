@@ -49,7 +49,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ],
-        vec!(Enemy::keese((128.0, 160.0)), Enemy::keese((256.0, 126.0)), Enemy::keese((350.0, 180.0))), //enemy vec
+        vec!(Enemy::new(30, (128.0, 160.0)), Enemy::new(30, (256.0, 126.0)), Enemy::new(30, (350.0, 180.0))), //enemy vec
         vec!(),
     ));
 	
@@ -129,9 +129,9 @@ pub fn run() -> Result <(), String> {
     let mut event_pump = sdl_context.event_pump()?;
     let mut a = room_creation().into_iter();
     let Some(n) = a.next() else{panic!("a");};
-    let mut fel = Felix::new(TILE_SIZE/2, (256.0, 272.0));
-    let mut cursor = WorldCursor::new(n); 
-    let mut player = Player::new(fel, cursor);
+    let fel = Felix::new(TILE_SIZE/2, (256.0, 272.0));
+    let cursor = WorldCursor::new(n); 
+    let mut player = GameRunner::new(fel, cursor);
     let Some(n) = a.next() else{panic!("a");};
     player.world.add_west(n);
 	let Some(n) = a.next() else{panic!("a");};
