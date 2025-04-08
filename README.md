@@ -6,7 +6,7 @@ furiously modding various Discord servers. One night, a mysterious user sends yo
 familiar foes, locate the powerful Smart Sword, and defeat Corro the Unsafe Rusturchin to save the beautiful Princess Ferris and return to your
 beloved NEET nest.
 
-currently in version 0.0.0
+currently in version 0.0.0 
 
 Collaborators: <br>
 Eyassu Mongalo, KU CS, Math '27 <br>
