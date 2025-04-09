@@ -4,6 +4,7 @@ use rand::Rng;
 const TILE_SIZE: u32 = 32;
 
 //two types of npc: shopkeeper and enemy
+//you're a genius eyassu
 
 #[derive(Debug)]
 pub struct Shopkeeper {

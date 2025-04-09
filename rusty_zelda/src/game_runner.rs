@@ -17,7 +17,6 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
     //LATER WILL IMPLEMENT FILE IO TO CHECK A TXT FILE.
     let mut vector: Vec<RoomData> = vec!();
     let room_contain = RoomData::Hostile(HostileRoomData::new(
-        (256.0, 272.0), //this var is completely useless now fun fact
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
@@ -35,7 +34,6 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
         vec!(), //item vec
     ));
     let room_two: RoomData =     RoomData::Hostile(HostileRoomData::new(
-        (0.0, 0.0), //change spawn l8ter
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -54,7 +52,6 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
     ));
 	
 	let room_three: RoomData =     RoomData::Hostile(HostileRoomData::new(
-        	(0.0, 0.0), //change spawn l8ter
         vec![
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -78,7 +75,7 @@ fn room_creation() -> Vec<RoomData>{ //make a vector containing ALL of the rooms
 }
 
 
-struct GameRunner { //could be in felix 
+struct GameRunner { 
     felix: Felix,
     world: WorldCursor
 }
@@ -121,18 +118,20 @@ pub fn run() -> Result <(), String> {
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
     let window = video_subsystem
-        .window("Rusty Zelda", ROOM_WIDTH, ROOM_HEIGHT)
+        .window("Rusty Zelda", ROOM_WIDTH, ROOM_HEIGHT) //might need to change this l8er
         .position_centered()
         .build()
         .map_err(|e| e.to_string())?;
     let mut canvas = window.into_canvas().build().map_err(|e| e.to_string())?;
     let mut event_pump = sdl_context.event_pump()?;
+
     let mut a = room_creation().into_iter();
     let Some(n) = a.next() else{panic!("a");};
-    let fel = Felix::new(TILE_SIZE/2, (256.0, 272.0));
+
+    let fel = Felix::new(TILE_SIZE/2, (256.0, 272.0)); //hi fel
     let cursor = WorldCursor::new(n); 
     let mut player = GameRunner::new(fel, cursor);
-    let Some(n) = a.next() else{panic!("a");};
+    let Some(n) = a.next() else{panic!("a");}; //i feel like we need a better way to do this
     player.world.add_west(n);
 	let Some(n) = a.next() else{panic!("a");};
     player.world.add_east(n);
@@ -150,22 +149,25 @@ pub fn run() -> Result <(), String> {
         }
 	//check if felix DIED like a dog
 	if player.felix.health_bar <= 0 { break 'running;}
-        //this could maybe be migrated to a Player function
+
         let mut keys = event_pump.keyboard_state();
         let room_dungeon;
         match player.world.get_curr(){
             RoomData::Shop(shop) => room_dungeon = &shop.dungeon,
             RoomData::Hostile(hostile) => room_dungeon = &hostile.dungeon,
         }
-        let mut item_rect = Rect::new(0, 0, 0, 0);
+
+        let mut item_rect = Rect::new(0, 0, 0, 0); //sword
         if keys.is_scancode_pressed(sdl2::keyboard::Scancode::Space){
             item_rect = player.felix.use_hand_a();
         }
+
         let room_enemy;
         match player.world.get_curr(){
             RoomData::Shop(shop) => room_enemy = vec!(),
             RoomData::Hostile(hostile) => room_enemy = hostile.get_enemy_col(),
         }
+
         player.felix.move_felix(&mut keys, room_dungeon, &room_enemy, true, &mut canvas);
 
 	if let Some(loading_zone) = player.in_loading_zone() {
@@ -194,7 +196,7 @@ pub fn run() -> Result <(), String> {
             }
         }
 	
-        canvas.set_draw_color(Color::RGB(0,0,0));
+        canvas.set_draw_color(Color::RGB(0,0,0)); //draws room
         canvas.clear();
         for y in 0..MAP_HEIGHT{
             for x in 0..MAP_WIDTH{
@@ -222,6 +224,7 @@ pub fn run() -> Result <(), String> {
 
         canvas.set_draw_color(Color::RGB(255, 179, 26));
         let _ = canvas.fill_rect(player.felix.rect());
+
         canvas.set_draw_color(Color::RGB(0, 0, 0)); 
         let _ = canvas.fill_rect(item_rect);
 	if let RoomData::Hostile(hostile) = player.world.get_curr_mut(){

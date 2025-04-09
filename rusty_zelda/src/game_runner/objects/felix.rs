@@ -40,15 +40,15 @@ impl Felix{
         }
         let (new_x, new_y) = (self.location.0 as f32 + dx, self.location.1 as f32 + dy);
 
-        if !self.in_collision(new_x, self.location.1, self.size as f32, world_dungeon, enem_corner){
+        if !self.in_collision(new_x, self.location.1, self.size as f32, world_dungeon, enem_corner, canvas){
             self.location.0 = new_x;
         }
-        if !self.in_collision(self.location.0, new_y, self.size as f32, world_dungeon, enem_corner){
+        if !self.in_collision(self.location.0, new_y, self.size as f32, world_dungeon, enem_corner, canvas){
             self.location.1 = new_y;
         }
     }
 
-    pub fn use_hand_a(&mut self) -> Rect{
+    pub fn use_hand_a(&mut self) -> Rect{ 
 	//render sword for like 3 seconds
 	if let Some(_) = self.hand.0{
         //println!("Go, Smart Sword. I choose you!");
@@ -80,10 +80,12 @@ impl Felix{
             }
         }
     }
+
     pub fn rect(&self) -> Rect{
         Rect::new(self.location.0 as i32, self.location.1 as i32, self.size, self.size)
     }
-    fn in_collision(&mut self, x: f32, y:f32, size: f32, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>) -> bool {
+
+    fn in_collision(&mut self, x: f32, y:f32, size: f32, world_dungeon: &Vec<Vec<u8>>, enem_corner: &Vec<[(f32, f32); 4]>, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) -> bool {
         let corners: [(f32, f32); 4]  = [
             (x, y),
             (x + size - 1.0, y),
@@ -99,7 +101,9 @@ impl Felix{
                 && 
                 (cy >= enemy[0].1 && cy <= enemy[2].1)){
                     //self.health_bar -= 1;
-                    //println!("Bouch!");
+                        println!("Bouch!");
+			canvas.set_draw_color(Color::RGB(16, 16, 16));  //this does NOT work
+        		let _ = canvas.fill_rect(self.rect()); //NO NO NO but i have class so it will remain NOT WOKRING
                     return true;
                 }
                 for (ex, ey) in enemy{
@@ -107,7 +111,9 @@ impl Felix{
                     && 
                     (*ey >= corners[0].1 && *ey <= corners[2].1)){
                         //self.health_bar -= 1;
-                        //println!("Couch!");
+                        println!("Couch!");
+			canvas.set_draw_color(Color::RGB(255, 255, 255));
+        		let _ = canvas.fill_rect(self.rect());
                         return true;
                     }
                 }
