@@ -84,9 +84,7 @@ impl GameRunner {
     fn new(felix: Felix, world: WorldCursor) -> Self{
         Self{felix, world}
     }
-    fn rect(&self) -> Rect{
-        Rect::new(self.felix.location.0 as i32, self.felix.location.1 as i32, self.felix.size, self.felix.size)
-    }
+
     fn in_loading_zone(&mut self) -> Option<char> {
         let corners = [
             (self.felix.location.0, self.felix.location.1),
