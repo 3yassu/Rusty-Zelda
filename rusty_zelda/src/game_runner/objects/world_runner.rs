@@ -175,10 +175,14 @@ impl WorldCursor{
     }
 }
 impl WorldCursor{ //instantiation and adding code
-    pub fn new(current_data: RoomData) -> Self{
+    pub fn new() -> Self{
+        Self{current: None, traverse: None}   
+    }
+    pub fn add_self(&mut self, room_data: RoomData){
         unsafe{
-            let room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(current_data))));
-            Self{current: Some(room), traverse: Some(room)}            
+            let room = NonNull::new_unchecked(Box::into_raw(Box::new(Room::new(room_data))));
+            self.current = Some(room);
+            self.traverse = Some(room);            
         }
     }
     pub fn add_north(&mut self, room_data: RoomData){

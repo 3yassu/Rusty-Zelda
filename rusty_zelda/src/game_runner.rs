@@ -109,6 +109,10 @@ impl GameRunner {
         }
         None
     }
+
+    fn get_key(){
+
+    }
 }
 
 pub fn run() -> Result <(), String> {
@@ -124,16 +128,14 @@ pub fn run() -> Result <(), String> {
     let mut event_pump = sdl_context.event_pump()?;
 
     let mut a = room_creation().into_iter();
-    let Some(n) = a.next() else{panic!("a");};
 
     let fel = Felix::new(TILE_SIZE/2, (256.0, 272.0)); //hi fel
-    let cursor = WorldCursor::new(n); 
+    let mut cursor = WorldCursor::new();
+    if let Some(n) = a.next() {cursor.add_self(n);} 
+    if let Some(n) = a.next() {cursor.add_west(n);} //i feel like we need a better way to do this
+    if let Some(n) = a.next() {cursor.add_east(n);}
     let mut player = GameRunner::new(fel, cursor);
-    let Some(n) = a.next() else{panic!("a");}; //i feel like we need a better way to do this
-    player.world.add_west(n);
-	let Some(n) = a.next() else{panic!("a");};
-    player.world.add_east(n);
-    
+   
     'running: loop{
         for event in event_pump.poll_iter(){
             match event {
