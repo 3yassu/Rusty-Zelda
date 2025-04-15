@@ -1,4 +1,4 @@
-## <=== Rusty Zelda: Zelda NES Implementation in Rust ===> 
+## <=== Rusty Zelda: Zelda NES Implementation in Rust ===>
 
 Your name is Felix. You spend your days laboring as a Rust dev and your nights hunched over your Thinkpad,
 furiously modding various Discord servers. One night, a mysterious user sends you a link encouraging you to —gasp— code in
