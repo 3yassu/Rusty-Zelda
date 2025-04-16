@@ -7,7 +7,7 @@ familiar foes, locate the powerful Smart Sword, and defeat Corro the Unsafe Rust
 beloved NEET nest. 
 
 currently in version 0.0.0 
-
+ 
 Collaborators: <br>
 Eyassu Mongalo, KU CS, Math '27 <br>
 Lillian Brooks-Kanost, KU CS '27
