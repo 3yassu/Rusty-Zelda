@@ -173,24 +173,20 @@ pub fn run() -> Result <(), String> {
 	if let Some(loading_zone) = player.in_loading_zone() {
             match loading_zone {
                 'l' => {
-			player.world.traverse_west();
-			player.world.set_connector();
-			player.felix.location.0 = 432.0; player.felix.location.1 = 176.0;
+                    player.world.set_west();
+                    player.felix.location = (432.0, 176.0);
                 }
                 'r' => {
-			player.world.traverse_east();
-			player.world.set_connector();
-			player.felix.location.0 = 80.0; player.felix.location.1 = 176.0;
+                    player.world.set_east();
+                    player.felix.location = (80.0, 176.0);
                 }
                 'n' => {
-                    	player.world.traverse_north();
-			player.world.set_connector();
-			player.felix.location.0 = 256.0; player.felix.location.1 = 272.0;
+                    player.world.set_north();
+                    player.felix.location = (256.0, 272.0);
                 }
                 's' => {
-                    	player.world.traverse_south();
-			player.world.set_connector();
-			player.felix.location.0 = 256.0; player.felix.location.1 = 80.0;
+                    player.world.set_west();
+                    player.felix.location = (256.0, 80.0);
                 }
                 _ => {}
             }

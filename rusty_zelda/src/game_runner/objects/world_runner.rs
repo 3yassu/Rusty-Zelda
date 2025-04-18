@@ -317,6 +317,26 @@ impl WorldCursor{ //instantiation and adding code
     }
 }
 impl WorldCursor{
+    pub fn set_north(&mut self){
+        self.traverse_north(); self.set_connector();
+    }
+    pub fn set_south(&mut self){
+        self.traverse_south(); self.set_connector();
+    }
+    pub fn set_east(&mut self){
+        self.traverse_east(); self.set_connector();
+    }
+    pub fn set_west(&mut self){
+        self.traverse_west(); self.set_connector();
+    }
+    pub fn set_up(&mut self){
+        self.traverse_up(); self.set_connector();
+    }
+    pub fn set_down(&mut self){
+        self.traverse_down(); self.set_connector();
+    }
+}
+impl WorldCursor{
     fn clear(&mut self){ //WANNA CHANGE TO ITERATIVE (also add functionanitly to put some metadata in a file for save states)
         self.current = None; //makes current None so it doesn't become a dangling pointer
         unsafe{ //dereferencing raw pointers is unsafe!!!
