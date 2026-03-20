@@ -5,14 +5,14 @@ edition = "2024"
 
 
 [target.'cfg(unix)'.dependencies]
-sdl2 = "0.37"
+sdl2 = "0.38"
 rand = "0.9"
 
 [target.'cfg(windows)'.dependencies.rand]
-version = "0.9"
+version = "0.10"
 
 [target.'cfg(windows)'.dependencies.sdl2]
-version = "0.37"
+version = "0.38"
 default-features = false
 features = ["ttf","image","gfx","mixer","static-link","use-vcpkg"]
 
